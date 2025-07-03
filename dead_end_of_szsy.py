@@ -61,8 +61,12 @@ class DeadEndOfSZSY:
 
     def run_game(self):
         """开始运行游戏"""
+        self.welcome()
         self.init_main_game()
         self._main_game(1)
+
+    def welcome(self):
+        pass
 
     def init_main_game(self):
         """初始化游戏"""
@@ -72,9 +76,10 @@ class DeadEndOfSZSY:
         """游戏主体部分"""
         if chap == 1:
             self.settings.chap_1()
-
-        # 产生小怪
-        self._prod_simple_enemies(self.settings.simple_enemy_number)
+        # 初始化刷怪笼
+        self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(self, self.settings.simple_enemy_wave,
+                                                               self.settings.simple_enemy_prod_blank,
+                                                               self.settings.simple_enemy_number)
 
         # 游戏主循环
         while True:
@@ -83,7 +88,9 @@ class DeadEndOfSZSY:
             self.clock.tick(60)
             # 响应输入
             self._check_events()
+
             # 刷新
+            self.prod_sp_enemy_waves.check_prod()
             self.hero.update()
             self._update_simple_enemies()
             self._bullet_launcher()
@@ -127,13 +134,36 @@ class DeadEndOfSZSY:
         elif event.key == pygame.K_s:
             self.hero.moving_down = False
 
-    def _prod_simple_enemies(self, number):
+    def prod_simple_enemy_wave(self, number):
         """产生number个simple_enemy"""
-        for i in range(self.settings.simple_enemy_number):
+        for i in range(number):
             enemy_x = random.randint(0, self.screen_rect.right)
             enemy_y = random.randint(0, self.screen_rect.bottom)
             enemy = enemies.SimpleEnemy(self, enemy_x, enemy_y)
             self.simple_enemies.add(enemy)
+
+    class ManageSimpleEnemyWaves:
+        """产生waves波怪，每波间隔blank秒，每波number个怪"""
+        def __init__(self, deos_game, waves, blank, number):
+            """初始化设定的间隔、当前间隔、当前波次"""
+            self.deos_game = deos_game
+            self.waves = waves
+            self.number = number
+            self.blank = blank * 60
+
+            self.current_blank = self.blank
+            self.current_waves = 0
+
+        def check_prod(self):
+            """判断是否继续添加波次，直到满足需求"""
+            if self.current_waves < self.waves:
+                if self.current_blank >= self.blank:
+                    self.deos_game.prod_simple_enemy_wave(self.number)
+                    self.current_waves += 1
+                    self.current_blank = 0
+                else:
+                    self.current_blank += 1
+
 
     def _update_simple_enemies(self):
         """刷新simple_enemy的移动行为"""
