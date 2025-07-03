@@ -44,7 +44,7 @@ class DeadEndOfSZSY:
         self.clock = pygame.time.Clock()
 
         # 计算发射子弹的帧管理
-        self.bullet_counter = 0
+        self.bullet_counter = self.settings.bullet_fire_blanking
 
     def run_game(self):
         """开始运行游戏"""
@@ -163,13 +163,18 @@ class DeadEndOfSZSY:
             if bullet_out:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_simple_enemy_collisions()
+
     def _bullet_launcher(self):
         """定时发射子弹"""
         self.bullet_counter += 1
-        if self.bullet_counter >= self.settings.bullet_fire_blanking * 60:  # 假设60FPS
+        if self.bullet_counter >= self.settings.bullet_fire_blanking * 60 and self.simple_enemies:  # 假设60FPS
             self._prod_bullet()
             self.bullet_counter = 0
 
+    def _check_bullet_simple_enemy_collisions(self):
+        """检查是否有子弹击中了simple_enemy"""
+        collisions = pygame.sprite.groupcollide(self.bullets, self.simple_enemies, True, True)
 
     def _update_screen(self):
         """管理刷新屏幕"""

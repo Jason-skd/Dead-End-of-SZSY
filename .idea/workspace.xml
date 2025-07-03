@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="finish movement">
-      <change afterPath="$PROJECT_DIR$/bullet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bg - 1.jpg" afterDir="false" />
+    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="finish bullet">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dead_end_of_szsy.py" beforeDir="false" afterPath="$PROJECT_DIR$/dead_end_of_szsy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,11 +77,36 @@
       <option name="project" value="LOCAL" />
       <updated>1751479236521</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="finish movement">
+      <option name="closed" value="true" />
+      <created>1751529430010</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1751529430010</updated>
+    </task>
+    <task id="LOCAL-00003" summary="finish movement">
+      <option name="closed" value="true" />
+      <created>1751529446102</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1751529446102</updated>
+    </task>
+    <task id="LOCAL-00004" summary="finish bullet">
+      <option name="closed" value="true" />
+      <created>1751529460999</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1751529460999</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="finish movement" />
-    <option name="LAST_COMMIT_MESSAGE" value="finish movement" />
+    <MESSAGE value="finish bullet" />
+    <option name="LAST_COMMIT_MESSAGE" value="finish bullet" />
   </component>
 </project>
