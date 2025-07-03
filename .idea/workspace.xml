@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Dead End of SZSY.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dead_end_of_szsy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/heroes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/sgzy - hurted.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/sgzy - normal.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="finish movement">
+      <change afterPath="$PROJECT_DIR$/bullet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/bg - 1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dead_end_of_szsy.py" beforeDir="false" afterPath="$PROJECT_DIR$/dead_end_of_szsy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/heroes.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,9 +28,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2zJz332gnTAXtlCBiFPbVeddAA5" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -54,7 +50,8 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/ASUS/PycharmProjects/Dead End of SZSY/images"
+    "last_opened_file_path": "C:/Users/ASUS/PycharmProjects/Dead End of SZSY/images",
+    "settings.editor.selected.configurable": "preferences.editor"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -77,6 +74,19 @@
       <option name="presentableId" value="Default" />
       <updated>1751463760969</updated>
     </task>
+    <task id="LOCAL-00001" summary="finish movement">
+      <option name="closed" value="true" />
+      <created>1751479236521</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1751479236521</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="finish movement" />
+    <option name="LAST_COMMIT_MESSAGE" value="finish movement" />
   </component>
 </project>

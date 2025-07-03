@@ -18,9 +18,6 @@ class Sgzy:
         self.image = pygame.transform.scale(self.image, (self.settings.heroes_width, self.settings.heroes_height))
         self.rect = self.image.get_rect()
 
-        # 创建Heroes的rect
-        self.x, self.y = float(self.rect.x), float(self.rect.y)
-
         # 移动标志
         self.moving_right = False
         self.moving_left = False
@@ -30,7 +27,6 @@ class Sgzy:
     def center_hero(self):
         """将hero初始化，放在屏幕正中央"""
         self.rect.center = self.screen_rect.center
-        self.x, self.y = float(self.rect.x), float(self.rect.y)
 
     def blitme(self):
         """在指定位置绘制self"""
@@ -38,13 +34,10 @@ class Sgzy:
 
     def update(self):
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += self.settings.heroes_speed
+            self.rect.x += self.settings.heroes_speed
         if self.moving_left and self.rect.left > self.screen_rect.left:
-            self.x -= self.settings.heroes_speed
+            self.rect.x -= self.settings.heroes_speed
         if self.moving_up and self.rect.top > self.screen_rect.top:
-            self.y -= self.settings.heroes_speed
+            self.rect.y -= self.settings.heroes_speed
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
-            self.y += self.settings.heroes_speed
-
-        # 将坐标映射回rect
-        self.rect.x, self.rect.y = self.x, self.y
+            self.rect.y += self.settings.heroes_speed
