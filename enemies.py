@@ -42,6 +42,11 @@ class SimpleEnemy(pygame.sprite.Sprite):
         pygame.draw.rect(self.screen, self.color, self.rect)
 
     def update(self, target):
+        """更新状态"""
+        self._update_moving(target)
+        self._manage_hurt()
+
+    def _update_moving(self, target):
         """向hero移动"""
         # 计算方向向量
         dx = target.rect.centerx - self.rect.centerx
@@ -53,28 +58,31 @@ class SimpleEnemy(pygame.sprite.Sprite):
             dx = dx / distance * self.speed
             dy = dy / distance * self.speed
 
+        # 如果不在攻击：更新位置
+        if self.moving:
+            self.rect.x += dx
+            self.rect.y += dy
+
+    def _manage_hurt(self):
+        """通过帧管理攻击冷却读秒"""
         # 如果造成伤害在冷却，冷却读秒
         if self.hurt_counter <= self.hurt_blank:
             self.hurt_counter += 1
 
         if pygame.sprite.collide_rect(self, self.hero):
-            # 如果simple_enemy正在攻击，停止运动，能不能造成伤害
+            # 如果simple_enemy正在攻击，停止运动，尝试造成伤害
             self.moving = False
             self._try_hurt()
         else:
             self.moving = True
 
-        # 更新位置
-        if self.moving:
-            self.rect.x += dx
-            self.rect.y += dy
-
     def _try_hurt(self):
-        """能造成伤害：造成伤害，进入贤者时间"""
+        """当测试为冷却读秒达到设定的冷却，造成伤害"""
         if self.hurt_counter >= self.hurt_blank:
             self.hurt()
             self.hurt_counter = 0
 
 
     def hurt(self):
+        """造成伤害"""
         self.deos_game.hero_hurt += self.hurt_value

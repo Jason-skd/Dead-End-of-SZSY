@@ -35,10 +35,10 @@ class Settings:
         self.simple_enemy_hurt_blank = 0.5
 
         # bullet 设置
-        self.bullet_fire_blanking = 1
+        self.bullet_fire_blanking = 0.5
         self.bullet_speed = 5.0
         self.bullet_radius = 8
-        self.bullet_color = (60, 60, 60)
+        self.bullet_color = (255, 255, 255)
 
         # blood_bar设置
         self.blood_bar_width = 55
