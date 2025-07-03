@@ -47,13 +47,15 @@ class Sgzy:
 
     def update(self):
         """刷新sgzy的状态"""
-        if self.moving_right and self.rect.right < self.screen_rect.right:
+        if self.moving_right and self.rect.right + self.width < self.screen_rect.right:
             self.rect.x += self.settings.heroes_speed
-        if self.moving_left and self.rect.left > self.screen_rect.left:
+        if self.moving_left and self.rect.left - self.width > self.screen_rect.left:
             self.rect.x -= self.settings.heroes_speed
-        if self.moving_up and self.rect.top > self.screen_rect.top:
+        if (self.moving_up and self.rect.top -
+                (self.height + self.settings.blood_bar_height + self.settings.blood_bar_pos_height)
+                > self.screen_rect.top):
             self.rect.y -= self.settings.heroes_speed
-        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
+        if self.moving_down and self.rect.bottom + self.height < self.screen_rect.bottom:
             self.rect.y += self.settings.heroes_speed
 
         if self.hurt:

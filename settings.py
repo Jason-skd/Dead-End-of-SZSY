@@ -7,6 +7,8 @@ class Settings:
         self.screen_width = 1920
         self.screen_height = 1080
 
+        # 欢迎界面设置
+
         # 背景设置
         # self.bg_color = (33, 40, 118)
         self.bg_image = 'images/bg - 1.jpg'
