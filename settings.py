@@ -8,6 +8,12 @@ class Settings:
         self.screen_height = 1080
 
         # 欢迎界面设置
+        # 按钮设置
+        self.play_button_width, self.play_button_height = 200, 50
+        self.play_button_color = (200, 50, 50)
+        self.play_color = (255, 255, 255)
+        self.play_font = None
+        self.play_size = 48
 
         # 背景设置
         # self.bg_color = (33, 40, 118)

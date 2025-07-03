@@ -7,6 +7,7 @@ import heroes
 import enemies
 from bullet import Bullet
 from blood_bar import BloodBar
+from button import Button
 
 class DeadEndOfSZSY:
     """DeadEndOfSZSY游戏的主进程"""
@@ -27,8 +28,8 @@ class DeadEndOfSZSY:
 
     def run_game(self):
         """开始运行游戏"""
-        self.Welcome(self)
-        self.chapt_1 = self.MainGame(self, 1)
+        if self.Welcome(self).run():
+            self.chapt_1 = self.MainGame(self, 1)
 
     class Welcome:
         """掌管欢迎界面的类"""
@@ -36,9 +37,42 @@ class DeadEndOfSZSY:
             """引入并初始化"""
             self.screen = deos_game.screen
             self.screen_rect = deos_game.screen_rect
+            self.settings = deos_game.settings
+            self.play_clicked = False  # 新增：标记是否点击了Play按钮
+
+        def run(self):
+            """运行欢迎界面，返回是否点击了Play按钮"""
+            while not self.play_clicked:  # 修改：条件变为检查play_clicked
+                self.create_play_button()
+                self._check_events()
+                self._update_screen()
+            return True  # 点击Play后返回True
 
         def create_play_button(self):
-            pass
+            self.play_button = Button(self, self.settings.play_button_width,
+                                      self.settings.play_button_height,
+                                      self.settings.play_button_color,
+                                      self.settings.play_color,
+                                      self.settings.play_font,
+                                      self.settings.play_size, "Play")
+
+        def _check_events(self):
+            """响应输入指令"""
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    self._check_play_button(mouse_pos)
+
+        def _check_play_button(self, mouse_pos):
+            """检查是否点击了Play按钮"""
+            if self.play_button.rect.collidepoint(mouse_pos):
+                self.play_clicked = True  # 修改：标记为已点击
+
+        def _update_screen(self):
+            self.play_button.draw_button()
+
+            # 让最近绘制的屏幕可见
+            pygame.display.flip()
 
     class MainGame:
         """main_game模板"""
