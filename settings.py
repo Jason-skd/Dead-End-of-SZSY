@@ -19,21 +19,38 @@ class Settings:
         self.heroes_height = 39.5 * 1.5
         self.heroes_speed = 2
 
+        self.sgzy_normal_image = 'images/sgzy - normal.jpg'
+        self.sgzy_hurt_image = 'images/sgzy - hurt.jpg'
+
+        self.sgzy_blood = 100
+
+        # 受伤变脸的时间
+        self.hurt_time = 0.5
+
         # enemies设置
         self.simple_enemy_width = 20
         self.simple_enemy_color = (255, 248, 125)
         self.simple_enemy_speed = 1
+        self.simple_enemy_harm = 8
+        self.simple_enemy_hurt_blank = 0.5
 
         # bullet 设置
         self.bullet_fire_blanking = 1
         self.bullet_speed = 5.0
-        self.bullet_radius = 10
+        self.bullet_radius = 8
         self.bullet_color = (60, 60, 60)
 
+        # blood_bar设置
+        self.blood_bar_width = 55
+        self.blood_bar_height = 15
+        self.blood_bar_color = (0, 200, 50)
+        self.blood_bar_pos_height = 10
+        self.blood_bar_border_width = 3
+
         # 关卡设置
-        self.simple_enemy_number = 10
+        self.simple_enemy_number = 50
 
     def chap_1(self):
         """广播：将进行chap_1"""
         self.bg_image = 'images/bg - 1.jpg'
-        self.simple_enemy_number = 10
+        self.simple_enemy_number = 50

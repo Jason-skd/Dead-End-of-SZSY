@@ -6,6 +6,7 @@ from settings import Settings
 import heroes
 import enemies
 from bullet import Bullet
+from blood_bar import BloodBar
 
 class DeadEndOfSZSY:
     """DeadEndOfSZSY游戏的主进程"""
@@ -43,8 +44,19 @@ class DeadEndOfSZSY:
         # 设置时钟
         self.clock = pygame.time.Clock()
 
-        # 计算发射子弹的帧管理
+        # 创建帧管理
         self.bullet_counter = self.settings.bullet_fire_blanking
+        # 变脸时间的帧管理
+        self.hurt_counter = 0
+        self.hurt_count_start = False
+
+        # 受伤管理 _max永不变
+        self.hero_blood_max = self.settings.sgzy_blood
+        self.hero_blood = self.hero_blood_max
+        self.hero_hurt = 0
+
+        # 实例化blood_bar
+        self.blood_bar = BloodBar(self)
 
     def run_game(self):
         """开始运行游戏"""
@@ -67,12 +79,15 @@ class DeadEndOfSZSY:
             # 游戏交互循环
             # 实例化时钟
             self.clock.tick(60)
+            self._check_events()
             self.hero.update()
             self._update_simple_enemies()
             self._bullet_launcher()
             self._update_bullet()
+            self.blood_bar.update()
+            self._check_simple_enemy_hero_collisions()
+            self.hurt_manage()
 
-            self._check_events()
             self._update_screen()
 
     def _check_events(self):
@@ -129,7 +144,6 @@ class DeadEndOfSZSY:
         min_distance = float('inf')
         min_x = float('inf')
         min_y = float('inf')
-        closest_enemy = None
         for enemy in self.simple_enemies:
             dx = enemy.rect.centerx - self.hero.rect.centerx
             dy = enemy.rect.centery - self.hero.rect.centery
@@ -138,7 +152,6 @@ class DeadEndOfSZSY:
                 min_distance = current_distance
                 min_x = dx
                 min_y = dy
-                closest_enemy = enemy
 
         # 标准化最小距离的方向向量并乘以速度
         # 标准化方向向量并乘以速度
@@ -176,6 +189,25 @@ class DeadEndOfSZSY:
         """检查是否有子弹击中了simple_enemy"""
         collisions = pygame.sprite.groupcollide(self.bullets, self.simple_enemies, True, True)
 
+    def _check_simple_enemy_hero_collisions(self):
+        """响应受到simple_enemy攻击"""
+        if self.hurt_count_start:
+            self.hurt_counter += 1
+        if pygame.sprite.spritecollideany(self.hero, self.simple_enemies):
+            self.hero.hurt = True
+            # 计时
+            self.hurt_counter = 0
+            self.hurt_count_start = True
+        if self.hurt_counter == self.settings.hurt_time * 60:
+            self.hero.hurt = False
+            self.hurt_count_start = False
+
+    def hurt_manage(self):
+        """负责扣血"""
+        self.hero_blood -= self.hero_hurt
+        # 重置受伤
+        self.hero_hurt = 0
+
     def _update_screen(self):
         """管理刷新屏幕"""
         # 用纯色填充背景
@@ -185,6 +217,8 @@ class DeadEndOfSZSY:
             enemy.draw_enemy()
         for bullet in self.bullets:
             bullet.draw_bullet()
+        self.blood_bar.draw_blood_blank()
+        self.blood_bar.draw_blood_bar()
 
 
         # 刷新屏幕
