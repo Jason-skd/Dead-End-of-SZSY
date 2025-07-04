@@ -195,6 +195,8 @@ class DeadEndOfSZSY:
             pygame.mixer.music.play(-1)
             self.hit_sound = pygame.mixer.Sound('bgm/hurt.wav')
             self.died_sound = pygame.mixer.Sound('bgm/die.wav')
+            self.fire_sound = pygame.mixer.Sound('bgm/fire.mp3')
+            self.fire_sound.set_volume(0.3)
             self.bg = pygame.image.load(self.settings.bg_image)
 
             # 初始化游戏对象
@@ -419,6 +421,7 @@ class DeadEndOfSZSY:
             self.bullet_counter += 1
             if self.bullet_counter >= self.settings.bullet_fire_blanking * 60 and self.enemies_for_target:  # 假设60FPS
                 self._prod_bullet()
+                self.fire_sound.play()
                 self.bullet_counter = 0
 
         def _check_bullet_simple_enemy_collisions(self):
