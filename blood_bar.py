@@ -2,7 +2,7 @@ import pygame
 
 class BloodBar:
     """管理血条的类"""
-    def __init__(self, deos_game):
+    def __init__(self, deos_game, target, blood_max, width):
         """初始化血条"""
         self.deos_game = deos_game
 
@@ -11,13 +11,13 @@ class BloodBar:
 
         self.settings = deos_game.settings
 
-        self.width = self.settings.blood_bar_width
+        self.width = width
         self.height = self.settings.blood_bar_height
         self.color = self.settings.blood_bar_color
         self.pos_height = self.settings.blood_bar_pos_height
         self.border_width = self.settings.blood_bar_border_width
 
-        self.hero = deos_game.hero
+        self.target = target
 
         # 先在0，0画出血条描边rect再移动到屏幕正下方
         self.rect = pygame.Rect(0, 0, self.width, self.height)
@@ -35,8 +35,7 @@ class BloodBar:
         self.blood_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
 
         # 初始化血量
-        self.blood = deos_game.hero_blood
-        self.blood_max = deos_game.hero_blood_max
+        self.blood_max = blood_max
 
     def draw_blood_blank(self):
         """画出血条的描边"""
@@ -46,19 +45,18 @@ class BloodBar:
         pygame.draw.rect(self.screen, (0, 0, 0), self.rect, self.border_width)
         self.screen.blit(self.blood_surface, (self.rect.x, self.rect.y))
 
-    def draw_blood_bar(self):
+    def draw_blood_bar(self, blood):
         """画出血条"""
-        self.blood = self.deos_game.hero_blood
         # 根据当前血量比例计算血条宽度
-        current_width = (self.blood / self.blood_max) * (self.width - 2 * self.border_width)
+        current_width = (blood / self.blood_max) * (self.width - 2 * self.border_width)
         self.blood_rect.width = max(0, current_width)  # 确保不小于0
         pygame.draw.rect(self.screen, self.color, self.blood_rect)
 
 
     def update(self):
         """血条跟随人物移动"""
-        self.rect.centerx = self.hero.rect.centerx
-        self.rect.centery = self.hero.rect.top - self.pos_height
+        self.rect.centerx = self.target.rect.centerx
+        self.rect.centery = self.target.rect.top - self.pos_height
 
         # 血条与血条描边左边缘重合
         self.blood_rect.left = self.rect.left + self.border_width

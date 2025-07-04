@@ -28,17 +28,28 @@ class DeadEndOfSZSY:
                 break
 
             # 第一章
-            with self.GameSession(self, 1) as game:
-                result = game.host_game()
-                if result == "Defeat":
-                    if not self.Defeat(self).run():  # 显示失败界面
-                        break
-                    continue  # 重新开始第一章
-                elif result == "Victory":
-                    if not self.NextChapt(self).run():
-                        pass
+            # with self.GameSession(self, 1) as game:
+            #     result = game.host_game()
+            #     if result == "Defeat":
+            #         if not self.Defeat(self).run():  # 显示失败界面
+            #             break
+            #         continue  # 重新开始第一章
+            #     elif result == "Victory":
+            #         if not self.NextChapt(self).run():
+            #             pass
+            #
+            # with self.GameSession(self, 2) as game:
+            #     result = game.host_game()
+            #     if result == "Defeat":
+            #         if not self.Defeat(self).run():
+            #             break
+            #         continue  # 重新开始第二章
+            #     elif result == "Victory":
+            #         # 可以在这里添加通关界面
+            #         if not self.NextChapt(self).run():
+            #             pass
 
-            with self.GameSession(self, 2) as game:
+            with self.GameSession(self, 3) as game:
                 result = game.host_game()
                 if result == "Defeat":
                     if not self.Defeat(self).run():
@@ -173,6 +184,8 @@ class DeadEndOfSZSY:
                 self.settings.chap_1()
             elif chap == 2:
                 self.settings.chap_2()
+            elif chap == 3:
+                self.settings.chap_3()
             self.head_name = self.settings.chap_head
 
 
@@ -195,7 +208,7 @@ class DeadEndOfSZSY:
             self.hero_blood_max = self.settings.sgzy_blood
             self.hero_blood = self.hero_blood_max
             self.hero_hurt = 0
-            self.blood_bar = BloodBar(self)
+            self.hero_blood_bar = BloodBar(self, self.hero, self.hero_blood_max, self.settings.blood_bar_width)
             self.hero.center_hero()
 
             self.head_exist = False
@@ -218,10 +231,14 @@ class DeadEndOfSZSY:
                 self._update_simple_enemies()
                 self._bullet_launcher()
                 self._update_bullet()
-                self.blood_bar.update()
+                self.hero_blood_bar.update()
                 self._hero_hurt_animation()
                 if self.head_exist:
                     self.gh.update(self.hero)
+                    self._check_bullet_head_collisions()
+                    self.gh_blood_bar.update()
+                    self.head_hurt_manage()
+
 
                 # 检查游戏状态
                 game_status = self.hurt_manage()
@@ -246,6 +263,13 @@ class DeadEndOfSZSY:
                 self.hero_hurt = 0
             else:
                 return "Defeat"
+            return None
+
+        def head_hurt_manage(self):
+            """头目的血量管理"""
+            if self.gh_blood > 0:
+                self.gh_blood -= self.gh_hurt
+                self.gh_hurt = 0
             return None
 
         def _check_events(self):
@@ -295,6 +319,15 @@ class DeadEndOfSZSY:
             if self.head_name == 'gh':
                 self.gh = enemies.Gh(self, 960, 540)
                 self.enemies_for_target.add(self.gh)
+
+                # 血条与伤害
+                self.gh_blood = self.settings.gh_blood
+                self.gh_blood_bar = BloodBar(self, self.gh, self.gh_blood, self.settings.gh_blood_bar_width)
+                self.gh_blood_bar.color = self.settings.gh_blood_bar_color
+                self.gh_hurt = 0
+
+                self.gh_group = pygame.sprite.Group()
+                self.gh_group.add(self.gh)
 
             self.head_exist = True
 
@@ -386,6 +419,13 @@ class DeadEndOfSZSY:
             """检查是否有子弹击中了simple_enemy"""
             collisions = pygame.sprite.groupcollide(self.bullets, self.simple_enemies, True, True)
 
+        def _check_bullet_head_collisions(self):
+            """检查子弹命中头目"""
+            collisions = pygame.sprite.groupcollide(self.bullets, self.gh_group, True, False)
+            if collisions:
+                self.gh_hurt += 1
+                collisions = None
+
         def _hero_hurt_animation(self):
             """响应hero受到simple_enemy攻击"""
             # 如果变脸了，读秒
@@ -411,11 +451,13 @@ class DeadEndOfSZSY:
             self.hero.blitme()
             for enemy in self.simple_enemies:
                 enemy.draw_enemy()
-            self.blood_bar.draw_blood_blank()
-            self.blood_bar.draw_blood_bar()
+            self.hero_blood_bar.draw_blood_blank()
+            self.hero_blood_bar.draw_blood_bar(self.hero_blood)
 
             if self.head_exist:
                 self.gh.draw_enemy()
+                self.gh_blood_bar.draw_blood_blank()
+                self.gh_blood_bar.draw_blood_bar(self.gh_blood)
 
             # 刷新屏幕
             pygame.display.flip()

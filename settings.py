@@ -11,7 +11,7 @@ class Settings:
         # 按钮设置
         self.play_button_width, self.play_button_height = 300, 100
         self.play_button_x, self.play_button_y = 960, 740
-        self.play_button_color = (50, 200, 50)
+        self.play_button_color = (50, 200, 200)
         self.play_color = (255, 255, 255)
         self.play_font = None
         self.play_size = 60
@@ -40,6 +40,7 @@ class Settings:
 
         self.gh_speed = 0.5
         self.gh_harm = 20
+        self.gh_blood = 120
         self.gh_hurt_blank = 1
         self.gh_image = 'images/gh.jpg'
         self.gh_width = 441 * 0.3
@@ -58,12 +59,16 @@ class Settings:
         self.blood_bar_pos_height = 10
         self.blood_bar_border_width = 3
 
+        self.gh_blood_bar_width = 130
+        self.gh_blood_bar_color = (200, 0, 50)
+
         # 关卡设置
         self.simple_enemy_speed = 1
         self.simple_enemy_number = 10
         self.simple_enemy_wave = 5
         self.simple_enemy_prod_blank = 5
         self.simple_enemy_color = (255, 248, 125)
+        self.chap_head = None
 
         self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
 
@@ -73,7 +78,7 @@ class Settings:
         self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
         self.bg_image = 'images/bg - 1.jpg'
         self.simple_enemy_number = 10
-        self.simple_enemy_wave = 7
+        self.simple_enemy_wave = 5
         self.simple_enemy_speed = 1
         self.simple_enemy_color = (255, 248, 125)
         self.chap_head = None
@@ -83,7 +88,17 @@ class Settings:
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 2.jpg'
         self.simple_enemy_number = 20
-        self.simple_enemy_wave = 5
+        self.simple_enemy_wave = 7
+        self.simple_enemy_speed = 1.5
+        self.simple_enemy_color = (100, 248, 200)
+        self.chap_head = None
+
+    def chap_3(self):
+        """广播：将进行chap_1"""
+        self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
+        self.bg_image = 'images/bg - 3.jpg'
+        self.simple_enemy_number = 10
+        self.simple_enemy_wave = 3
         self.simple_enemy_speed = 1.5
         self.simple_enemy_color = (100, 248, 200)
         self.chap_head = 'gh'
