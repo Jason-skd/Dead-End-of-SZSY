@@ -3,7 +3,7 @@ import pygame.font
 class Button:
     """为游戏创建按钮的类"""
 
-    def __init__(self, deos_game, width, height, button_color, text_color, font, font_size, msg):
+    def __init__(self, deos_game, width, height, pos_x, pos_y, button_color, text_color, font, font_size, msg):
         """初始化按钮的属性"""
         self.screen = deos_game.screen
         self.screen_rect = self.screen.get_rect()
@@ -17,7 +17,8 @@ class Button:
 
         # 创建按钮的rect对象并使其居中
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.center = self.screen_rect.center
+        self.rect.centerx = pos_x
+        self.rect.centery = pos_y
 
         # 按钮的标签只需创建一次
         self._prep_msg(msg)

@@ -1,4 +1,4 @@
-import sys, random, math, time
+import sys, random, math
 import pygame
 from settings import Settings
 import heroes
@@ -103,6 +103,8 @@ class DeadEndOfSZSY:
         def _check_events(self):
             """响应输入指令"""
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     self._check_play_button(mouse_pos)
