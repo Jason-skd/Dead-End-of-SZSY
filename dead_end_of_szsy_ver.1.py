@@ -46,7 +46,6 @@ class DeadEndOfSZSY:
                     continue  # 重新开始第二章
                 elif result == "Victory":
                     # 可以在这里添加通关界面
-                    print("恭喜通关！")
                     break
 
 
@@ -95,6 +94,8 @@ class DeadEndOfSZSY:
         def create_play_button(self):
             self.play_button = Button(self, self.settings.play_button_width,
                                       self.settings.play_button_height,
+                                      self.settings.play_button_x,
+                                      self.settings.play_button_y,
                                       self.settings.play_button_color,
                                       self.settings.play_color,
                                       self.settings.play_font,
@@ -132,6 +133,8 @@ class DeadEndOfSZSY:
             """重写play_button为try_again"""
             self.play_button = Button(self, self.settings.play_button_width,
                                       self.settings.play_button_height,
+                                      self.settings.play_button_x,
+                                      self.settings.play_button_y,
                                       self.settings.play_button_color,
                                       self.settings.play_color,
                                       self.settings.play_font,
@@ -148,6 +151,8 @@ class DeadEndOfSZSY:
             """重写play_button为try_again"""
             self.play_button = Button(self, self.settings.play_button_width,
                                       self.settings.play_button_height,
+                                      self.settings.play_button_x,
+                                      self.settings.play_button_y,
                                       self.settings.play_button_color,
                                       self.settings.play_color,
                                       self.settings.play_font,

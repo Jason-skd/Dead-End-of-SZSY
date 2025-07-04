@@ -10,6 +10,7 @@ class Settings:
         # 欢迎界面设置
         # 按钮设置
         self.play_button_width, self.play_button_height = 300, 100
+        self.play_button_x, self.play_button_y = 960, 740
         self.play_button_color = (50, 200, 50)
         self.play_color = (255, 255, 255)
         self.play_font = None
