@@ -52,9 +52,9 @@ class DeadEndOfSZSY:
             with self.GameSession(self, 3) as game:
                 result = game.host_game()
                 if result == "Defeat":
-                    if not self.Defeat(self).run():
-                        break
-                    continue  # 重新开始第二章
+                    # gh跳脸
+                    if game.game_instance.head_exist:
+                        game.game_instance.jump_face = True
                 elif result == "Victory":
                     # 可以在这里添加通关界面
                     break
@@ -217,6 +217,8 @@ class DeadEndOfSZSY:
             self.hero.center_hero()
 
             self.head_exist = False
+            # 跳脸
+            self.jump_face = False
 
         def host_game(self):
             """游戏主循环，返回 'Victory' 或 'Defeat'"""
@@ -243,6 +245,7 @@ class DeadEndOfSZSY:
                     self._check_bullet_head_collisions()
                     self.gh_blood_bar.update()
                     self.head_hurt_manage()
+                    self.gh_skill_manage.check_prod()
 
 
                 # 检查游戏状态
@@ -337,6 +340,9 @@ class DeadEndOfSZSY:
                 self.gh_group = pygame.sprite.Group()
                 self.gh_group.add(self.gh)
 
+                # 技能
+                self.gh_skill_manage = self.HeadSkillManage(self, self.settings.gh_skill_blank)
+
             self.head_exist = True
 
         class ManageSimpleEnemyWaves:
@@ -365,6 +371,35 @@ class DeadEndOfSZSY:
                 else:
                     if not self.deos_game.head_exist and self.deos_game.head_name:
                         self.deos_game.prod_head()
+
+        class HeadSkillManage(ManageSimpleEnemyWaves):
+            """计算头目技能时机"""
+            def __init__(self, deos_game, blank):
+                """初始化计数"""
+                super().__init__(deos_game, 0, blank, 0)
+
+                # 上次的技能序号，不与本次相同
+                self.last_skill = 0
+                self.current_skill = 0
+
+            def check_prod(self):
+                """计时器"""
+                if self.current_blank >= self.blank:
+                    self.prod_skill()
+                    self.current_blank = 0
+                else:
+                    self.current_blank += 1
+
+            def prod_skill(self):
+                """随机产生技能"""
+                while self.current_skill != self.last_skill:
+                    self.current_skill = random.randint(1, 2)  # 有几种技能
+
+                if self.current_skill == 1:
+                    pass
+                elif self.current_skill == 2:
+                    pass
+
 
         def _update_simple_enemies(self):
             """刷新simple_enemy的移动行为"""

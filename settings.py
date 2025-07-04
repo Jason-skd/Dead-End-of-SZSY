@@ -48,6 +48,7 @@ class Settings:
         self.gh_image = 'images/gh.jpg'
         self.gh_width = 441 * 0.3
         self.gh_height = 506 * 0.3
+        self.gh_skill_blank = 15
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5

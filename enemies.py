@@ -114,6 +114,10 @@ class Gh(SimpleEnemy):
 
         self.speed = self.settings.gh_speed
 
+    def carrot(self):
+        """gh技能：拔出萝卜带出泥"""
+        pass
+
     def draw_enemy(self):
         """在屏幕上绘制gh"""
         self.screen.blit(self.image, self.rect)
