@@ -49,6 +49,8 @@ class Settings:
         self.gh_width = 441 * 0.3
         self.gh_height = 506 * 0.3
         self.gh_skill_blank = 15
+        self.gh_face = 'images/gh_face.jpg'
+        self.jump_face_sound = 'bgm/jump_face.wav'
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5
@@ -82,23 +84,23 @@ class Settings:
         self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
         self.bg_image = 'images/bg - 1.jpg'
         self.simple_enemy_number = 10
-        self.simple_enemy_wave = 5
+        self.simple_enemy_wave = 3
         self.simple_enemy_speed = 1
         self.simple_enemy_color = (255, 248, 125)
         self.chap_head = None
 
     def chap_2(self):
-        """广播：将进行chap_1"""
+        """广播：将进行chap_2"""
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 2.jpg'
-        self.simple_enemy_number = 20
-        self.simple_enemy_wave = 7
+        self.simple_enemy_number = 10
+        self.simple_enemy_wave = 3
         self.simple_enemy_speed = 1.5
         self.simple_enemy_color = (100, 248, 200)
         self.chap_head = None
 
     def chap_3(self):
-        """广播：将进行chap_1"""
+        """广播：将进行chap_3"""
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 3.jpg'
         self.simple_enemy_number = 10

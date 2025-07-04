@@ -22,41 +22,50 @@ class DeadEndOfSZSY:
 
     def run_game(self):
         """主游戏循环，管理章节切换"""
-        while True:
-            # 显示欢迎界面
-            if not self.Welcome(self).run():
-                break
+        # 直到点击才不检测play按钮
+        while not self.Welcome(self).run():
+            break
 
-            # 第一章
+        while True:
             with self.GameSession(self, 1) as game:
                 result = game.host_game()
                 if result == "Defeat":
-                    if not self.Defeat(self).run():  # 显示失败界面
+                    # 直到点击才重新开始本章
+                    while self.Defeat(self).run():
                         break
-                    continue  # 重新开始第一章
+                    continue
                 elif result == "Victory":
-                    if not self.NextChapt(self).run():
-                        pass
+                    # 直到点击才开始下一章
+                    while self.NextChapt(self).run():
+                        break
+                    break
 
+        while True:
             with self.GameSession(self, 2) as game:
                 result = game.host_game()
                 if result == "Defeat":
-                    if not self.Defeat(self).run():
+                    # 直到点击才重新开始本章
+                    while self.Defeat(self).run():
                         break
-                    continue  # 重新开始第二章
+                    continue
                 elif result == "Victory":
-                    # 可以在这里添加通关界面
-                    if not self.NextChapt(self).run():
-                        pass
+                    # 直到点击才开始下一章
+                    while self.NextChapt(self).run():
+                        break
+                    break
 
+        while True:
             with self.GameSession(self, 3) as game:
                 result = game.host_game()
                 if result == "Defeat":
-                    # gh跳脸
-                    if game.game_instance.head_exist:
-                        game.game_instance.jump_face = True
+                    # 直到点击才重新开始本章
+                    while self.Defeat(self).run():
+                        break
+                    continue
                 elif result == "Victory":
-                    # 可以在这里添加通关界面
+                    # 直到点击才开始下一章
+                    while self.NextChapt(self).run():
+                        break
                     break
 
 
@@ -228,6 +237,8 @@ class DeadEndOfSZSY:
                 self.settings.simple_enemy_number)
 
             running = True
+
+            jump_face_tik = 0
             while running:
                 self.clock.tick(60)
                 self._check_events()
@@ -252,6 +263,18 @@ class DeadEndOfSZSY:
                 game_status = self.hurt_manage()
                 if game_status == "Defeat":
                     self.died_sound.play()
+                    if self.head_exist:
+                        # 跳脸
+                        while jump_face_tik <= 2:
+                            self.clock.tick(1)
+                            jump_face_tik += 1
+                            if jump_face_tik >= 1:
+                                self.gh_jump_face()
+                                pygame.display.flip()
+                            if jump_face_tik == 1:
+                                jump_face_sound = pygame.mixer.Sound(self.settings.jump_face_sound)
+                                jump_face_sound.play()
+
                     return "Defeat"
                 elif self._check_victory():  # 新增：检查是否胜利
                     return "Victory"
@@ -486,6 +509,14 @@ class DeadEndOfSZSY:
                 self.hero.hurt = False
                 self.hurt_count_start = False
 
+        def gh_jump_face(self):
+            image = pygame.image.load(self.settings.gh_face)
+            image = pygame.transform.scale(image, (716, 810))
+            rect = image.get_rect()
+
+            rect.center = self.screen_rect.center
+            self.screen.blit(image, rect)
+
         def _update_screen(self):
             """绘制屏幕"""
             # 用纯色填充背景
@@ -503,7 +534,6 @@ class DeadEndOfSZSY:
                 self.gh_blood_bar.draw_blood_blank()
                 self.gh_blood_bar.draw_blood_bar(self.gh_blood)
 
-            # 刷新屏幕
             pygame.display.flip()
 
 
