@@ -1,7 +1,5 @@
 import sys, random, math, time
-
 import pygame
-
 from settings import Settings
 import heroes
 import enemies
@@ -9,28 +7,55 @@ from bullet import Bullet
 from blood_bar import BloodBar
 from button import Button
 
+
 class DeadEndOfSZSY:
     """DeadEndOfSZSY游戏的主进程"""
 
     def __init__(self):
         """初始化游戏"""
         pygame.init()
-
-        # 禁用中文输入
         pygame.key.stop_text_input()
-
         self.settings = Settings()
-
-        # 设定背景和窗口名称
         pygame.display.set_caption("实验的末路")
         self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         self.screen_rect = self.screen.get_rect()
 
     def run_game(self):
         """开始运行游戏"""
-        if self.Welcome(self).run():
-            self.chapt_1 = self.MainGame(self, 1)
-            del self.chapt_1
+        while True:
+            if not self.Welcome(self).run():
+                break
+
+            # 使用上下文管理器管理游戏会话
+            with self.GameSession(self, 1) as game:
+                result = game.host_game()
+                if result == "Defeat":
+                    if not self.Defeat(self).run():
+                        break
+
+    class GameSession:
+        """使用上下文管理器管理游戏资源"""
+
+        def __init__(self, deos_game, chap):
+            self.deos_game = deos_game
+            self.chap = chap
+            self.game_instance = None
+
+        def __enter__(self):
+            """进入游戏会话时初始化游戏"""
+            self.game_instance = self.deos_game.MainGame(self.deos_game, self.chap)
+            return self.game_instance
+
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            """退出游戏会话时清理资源"""
+            if self.game_instance:
+                # 停止音乐
+                pygame.mixer.music.stop()
+                # 清空精灵组
+                self.game_instance.bullets.empty()
+                self.game_instance.simple_enemies.empty()
+                # 释放其他资源...
+            return False  # 不抑制异常
 
     class Welcome:
         """掌管欢迎界面的类"""
@@ -89,90 +114,84 @@ class DeadEndOfSZSY:
                                       self.settings.play_button_color,
                                       self.settings.play_color,
                                       self.settings.play_font,
-                                      self.settings.play_size, "Defeat")
+                                      self.settings.play_size, "Try Again")
 
 
     class MainGame:
-        """main_game模板"""
+        """游戏主逻辑"""
+
         def __init__(self, deos_game, chap):
-            """初始化main_game，进行第chap关"""
+            """初始化游戏"""
             self.deos_game = deos_game
             self.settings = deos_game.settings
             self.screen = deos_game.screen
             self.screen_rect = deos_game.screen_rect
 
-            # 章节设置，将settings中的章节动态项变为chapter_1的设置
             if chap == 1:
                 self.settings.chap_1()
 
-            # 设定bgm
+            # 加载资源
             pygame.mixer.music.load(self.settings.bgm)
             pygame.mixer.music.play(-1)
-
-            # 设置背景
             self.bg = pygame.image.load(self.settings.bg_image)
 
-            # 设定hero
+            # 初始化游戏对象
             self.hero = heroes.Sgzy(self)
-
-            # 创建管理simple_enemy的组
             self.simple_enemies = pygame.sprite.Group()
-
-            # 创建管理bullets的组
             self.bullets = pygame.sprite.Group()
-
-            # 设置时钟
+            self.enemies = pygame.sprite.Group()
+            self.gh = None
             self.clock = pygame.time.Clock()
 
-            # 创建帧管理
+            # 初始化游戏状态
             self.bullet_counter = self.settings.bullet_fire_blanking
-            # 变脸时间的帧管理
             self.hurt_counter = 0
-            # 开始：不变脸
             self.hurt_count_start = False
-
-            # 受伤管理 _max永不变
             self.hero_blood_max = self.settings.sgzy_blood
             self.hero_blood = self.hero_blood_max
             self.hero_hurt = 0
-
-            # 实例化blood_bar（要先加载hero最大血量）
             self.blood_bar = BloodBar(self)
-
             self.hero.center_hero()
 
-            # 初始化完成，举办游戏
-            self.host_game()
-
         def host_game(self):
-            """游戏主体部分"""
-            # 初始化刷怪笼
-            self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(self, self.settings.simple_enemy_wave,
-                                                                   self.settings.simple_enemy_prod_blank,
-                                                                   self.settings.simple_enemy_number)
+            """游戏主循环"""
+            self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(
+                self, self.settings.simple_enemy_wave,
+                self.settings.simple_enemy_prod_blank,
+                self.settings.simple_enemy_number)
 
-            # 游戏主循环
-            while True:
-                # 游戏交互循环
-                # 实例化时钟
+            running = True
+            while running:
                 self.clock.tick(60)
-                # 响应输入
                 self._check_events()
 
-                # 刷新
+                # 游戏逻辑更新
                 self.prod_sp_enemy_waves.check_prod()
                 self.hero.update()
                 self._update_simple_enemies()
+                self.enemies.add(self.simple_enemies)
                 self._bullet_launcher()
                 self._update_bullet()
                 self.blood_bar.update()
-                # 管理
                 self._hero_hurt_animation()
-                self.hurt_manage()
-                if self.hurt_manage() == False:
-                    break
+                if self.gh is not None:
+                    self.gh.update(self.hero)
+
+                # 检查游戏状态
+                if self.hurt_manage() == "Defeat":
+                    return "Defeat"
 
                 self._update_screen()
+            return None
+
+        def hurt_manage(self):
+            """血量管理"""
+            if self.hero_blood > 0:
+                self.hero_blood -= self.hero_hurt
+                self.hero_hurt = 0
+            else:
+                return "Defeat"
+            return None
 
         def _check_events(self):
             """响应输入"""
@@ -216,6 +235,7 @@ class DeadEndOfSZSY:
 
         class ManageSimpleEnemyWaves:
             """产生waves波怪，每波间隔blank秒，每波number个怪"""
+
             def __init__(self, deos_game, waves, blank, number):
                 """初始化设定的间隔、当前间隔、当前波次"""
                 self.deos_game = deos_game
@@ -228,6 +248,9 @@ class DeadEndOfSZSY:
 
             def check_prod(self):
                 """判断是否继续添加波次，直到满足需求"""
+                # 还未添加头目
+                heads = False
+
                 if self.current_waves < self.waves:
                     if self.current_blank >= self.blank:
                         self.deos_game.prod_simple_enemy_wave(self.number)
@@ -235,11 +258,21 @@ class DeadEndOfSZSY:
                         self.current_blank = 0
                     else:
                         self.current_blank += 1
+                else:
+                    if not heads:
+                        self.deos_game.prod_heads()
+                        heads = True
 
+
+        def prod_heads(self):
+            """创建头目"""
+            # 目前默认创建gh
+            self.gh = enemies.Gh(self, 1500, 540)
+            self.enemies.add(self.gh)
 
         def _update_simple_enemies(self):
             """刷新simple_enemy的移动行为"""
-            for enemy in self.simple_enemies:
+            for enemy in self.enemies:
                 # 以hero为目标
                 enemy.update(self.hero)
 
@@ -253,7 +286,7 @@ class DeadEndOfSZSY:
             min_distance = float('inf')
             min_x = float('inf')
             min_y = float('inf')
-            for enemy in self.simple_enemies:
+            for enemy in self.enemies:
                 dx = enemy.rect.centerx - self.hero.rect.centerx
                 dy = enemy.rect.centery - self.hero.rect.centery
                 current_distance = math.sqrt(dx * dx + dy * dy)
@@ -314,17 +347,6 @@ class DeadEndOfSZSY:
                 self.hero.hurt = False
                 self.hurt_count_start = False
 
-        def hurt_manage(self):
-            """负责扣血"""
-            if self.hero_blood > 0:
-                self.hero_blood -= self.hero_hurt
-                # 重置受伤
-                self.hero_hurt = 0
-
-            else:
-                self.deos_game.Defeat(self).run()
-                return False
-
         def _update_screen(self):
             """绘制屏幕"""
             # 用纯色填充背景
@@ -334,15 +356,18 @@ class DeadEndOfSZSY:
             self.hero.blitme()
             for enemy in self.simple_enemies:
                 enemy.draw_enemy()
+
+            if hasattr(self, 'gh') and self.gh is not None:  # 更健壮的判断
+                print("Drawing Gh at:", self.gh.rect.topleft)  # 调试
+                self.gh.draw_enemy()
+
             self.blood_bar.draw_blood_blank()
             self.blood_bar.draw_blood_bar()
-
 
             # 刷新屏幕
             pygame.display.flip()
 
 
 if __name__ == '__main__':
-    # 创建游戏实例并运行游戏
     deos = DeadEndOfSZSY()
     deos.run_game()

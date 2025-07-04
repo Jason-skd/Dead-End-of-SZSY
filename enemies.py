@@ -86,3 +86,34 @@ class SimpleEnemy(pygame.sprite.Sprite):
     def hurt(self):
         """造成伤害"""
         self.deos_game.hero_hurt += self.hurt_value
+
+
+class Gh(SimpleEnemy):
+    """管理gh的类"""
+    def __init__(self, deos_game, pos_x, pos_y):
+        """重新初始化gh"""
+        super().__init__(deos_game, pos_x, pos_y)
+        self.deos_game = deos_game
+
+        # 加载图片并缩放
+        self.image = pygame.image.load(self.settings.gh_image)
+        self.image = pygame.transform.scale(self.image, (self.settings.gh_width, self.settings.gh_height))
+        self.rect = self.image.get_rect(center=(pos_x, pos_y))
+
+        # 伤害
+        self.hurt_value = self.settings.gh_harm
+
+        # 伤害冷却
+        self.hurt_blank = self.settings.gh_hurt_blank * 60
+
+        self.speed = self.settings.gh_speed
+
+        self.rect.center = (pos_x, pos_y)  # 添加这行设置位置
+
+    def draw_enemy(self):
+        """在屏幕上绘制simple_enemy"""
+        self.screen.blit(self.image, self.rect)
+
+    def update(self, target):
+        super().update(target)  # 调用父类的移动逻辑
+        print(f"Gh rect: {self.rect.x}, {self.rect.y}")  # 调试位置

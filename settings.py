@@ -42,6 +42,13 @@ class Settings:
         self.simple_enemy_harm = 8
         self.simple_enemy_hurt_blank = 0.5
 
+        self.gh_speed = 2
+        self.gh_harm = 8
+        self.gh_hurt_blank = 0.5
+        self.gh_image = 'images/gh.jpg'
+        self.gh_width = 441 * 0.3
+        self.gh_height = 506 * 0.3
+
         # bullet 设置
         self.bullet_fire_blanking = 0.5
         self.bullet_speed = 5.0
@@ -59,10 +66,19 @@ class Settings:
         self.simple_enemy_number = 10
         self.simple_enemy_wave = 5
         self.simple_enemy_prod_blank = 5
+        self.heads = None
 
 
     def chap_1(self):
         """广播：将进行chap_1"""
         self.bg_image = 'images/bg - 1.jpg'
-        self.simple_enemy_number = 10
-        self.simple_enemy_wave = 5
+        self.simple_enemy_number = 1
+        self.simple_enemy_wave = 1
+        self.heads = None
+
+    def chap_2(self):
+        """广播：将进行chap_1"""
+        self.bg_image = 'images/bg - 1.jpg'
+        self.simple_enemy_number = 15
+        self.simple_enemy_wave = 7
+        self.heads = gh
