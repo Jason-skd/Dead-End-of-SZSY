@@ -7,6 +7,9 @@ class Settings:
         self.screen_width = 1920
         self.screen_height = 1080
 
+        # 声音设置
+        self.bgm_volume = 0.3
+
         # 欢迎界面设置
         # 按钮设置
         self.play_button_width, self.play_button_height = 300, 100

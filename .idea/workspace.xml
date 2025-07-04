@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="make up button">
+    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="finish gh movement and blood manage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blood_bar.py" beforeDir="false" afterPath="$PROJECT_DIR$/blood_bar.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
@@ -313,7 +312,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751629365214</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="finish gh movement and blood manage">
+      <option name="closed" value="true" />
+      <created>1751640603410</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1751640603410</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -335,6 +342,7 @@
     <MESSAGE value="bug" />
     <MESSAGE value="chapter1 finish!" />
     <MESSAGE value="make up button" />
-    <option name="LAST_COMMIT_MESSAGE" value="make up button" />
+    <MESSAGE value="finish gh movement and blood manage" />
+    <option name="LAST_COMMIT_MESSAGE" value="finish gh movement and blood manage" />
   </component>
 </project>

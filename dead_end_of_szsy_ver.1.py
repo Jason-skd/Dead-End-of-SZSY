@@ -28,26 +28,26 @@ class DeadEndOfSZSY:
                 break
 
             # 第一章
-            # with self.GameSession(self, 1) as game:
-            #     result = game.host_game()
-            #     if result == "Defeat":
-            #         if not self.Defeat(self).run():  # 显示失败界面
-            #             break
-            #         continue  # 重新开始第一章
-            #     elif result == "Victory":
-            #         if not self.NextChapt(self).run():
-            #             pass
-            #
-            # with self.GameSession(self, 2) as game:
-            #     result = game.host_game()
-            #     if result == "Defeat":
-            #         if not self.Defeat(self).run():
-            #             break
-            #         continue  # 重新开始第二章
-            #     elif result == "Victory":
-            #         # 可以在这里添加通关界面
-            #         if not self.NextChapt(self).run():
-            #             pass
+            with self.GameSession(self, 1) as game:
+                result = game.host_game()
+                if result == "Defeat":
+                    if not self.Defeat(self).run():  # 显示失败界面
+                        break
+                    continue  # 重新开始第一章
+                elif result == "Victory":
+                    if not self.NextChapt(self).run():
+                        pass
+
+            with self.GameSession(self, 2) as game:
+                result = game.host_game()
+                if result == "Defeat":
+                    if not self.Defeat(self).run():
+                        break
+                    continue  # 重新开始第二章
+                elif result == "Victory":
+                    # 可以在这里添加通关界面
+                    if not self.NextChapt(self).run():
+                        pass
 
             with self.GameSession(self, 3) as game:
                 result = game.host_game()
@@ -191,7 +191,10 @@ class DeadEndOfSZSY:
 
             # 加载资源
             pygame.mixer.music.load(self.settings.bgm)
+            pygame.mixer.music.set_volume(self.settings.bgm_volume)
             pygame.mixer.music.play(-1)
+            self.hit_sound = pygame.mixer.Sound('bgm/hurt.wav')
+            self.died_sound = pygame.mixer.Sound('bgm/die.wav')
             self.bg = pygame.image.load(self.settings.bg_image)
 
             # 初始化游戏对象
@@ -243,6 +246,7 @@ class DeadEndOfSZSY:
                 # 检查游戏状态
                 game_status = self.hurt_manage()
                 if game_status == "Defeat":
+                    self.died_sound.play()
                     return "Defeat"
                 elif self._check_victory():  # 新增：检查是否胜利
                     return "Victory"
@@ -259,7 +263,9 @@ class DeadEndOfSZSY:
         def hurt_manage(self):
             """血量管理"""
             if self.hero_blood > 0:
-                self.hero_blood -= self.hero_hurt
+                if self.hero_hurt > 0:
+                    self.hero_blood -= self.hero_hurt
+                    self.hit_sound.play()
                 self.hero_hurt = 0
             else:
                 return "Defeat"
