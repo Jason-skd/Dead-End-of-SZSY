@@ -25,6 +25,10 @@ class SimpleEnemy(pygame.sprite.Sprite):
 
         self.speed = self.settings.simple_enemy_speed
 
+        # 存储浮点数位置
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+
         # 移动标志，不处于攻击状态：移动
         self.moving = True
         self.hero = deos_game.hero
@@ -60,8 +64,10 @@ class SimpleEnemy(pygame.sprite.Sprite):
 
         # 如果不在攻击：更新位置
         if self.moving:
-            self.rect.x += dx
-            self.rect.y += dy
+            self.x += dx  # 更新浮点数坐标
+            self.y += dy
+            self.rect.x = int(self.x)  # 取整赋值给 rect
+            self.rect.y = int(self.y)
 
     def _manage_hurt(self):
         """通过帧管理攻击冷却读秒"""
@@ -108,12 +114,6 @@ class Gh(SimpleEnemy):
 
         self.speed = self.settings.gh_speed
 
-        self.rect.center = (pos_x, pos_y)  # 添加这行设置位置
-
     def draw_enemy(self):
-        """在屏幕上绘制simple_enemy"""
+        """在屏幕上绘制gh"""
         self.screen.blit(self.image, self.rect)
-
-    def update(self, target):
-        super().update(target)  # 调用父类的移动逻辑
-        print(f"Gh rect: {self.rect.x}, {self.rect.y}")  # 调试位置
