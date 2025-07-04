@@ -25,7 +25,7 @@ class DeadEndOfSZSY:
         while True:
             # 显示欢迎界面
             if not self.Welcome(self).run():
-                break  # 玩家退出
+                break
 
             # 第一章
             with self.GameSession(self, 1) as game:
@@ -35,9 +35,9 @@ class DeadEndOfSZSY:
                         break
                     continue  # 重新开始第一章
                 elif result == "Victory":
-                    pass  # 进入第二章
+                    if not self.NextChapt(self).run():
+                        pass
 
-            # 第二章
             with self.GameSession(self, 2) as game:
                 result = game.host_game()
                 if result == "Defeat":
@@ -113,6 +113,7 @@ class DeadEndOfSZSY:
                 self.play_clicked = True  # 修改：标记为已点击
 
         def _update_screen(self):
+            self.screen.fill((0, 0, 0))
             self.play_button.draw_button()
 
             # 让最近绘制的屏幕可见
@@ -133,6 +134,22 @@ class DeadEndOfSZSY:
                                       self.settings.play_color,
                                       self.settings.play_font,
                                       self.settings.play_size, "Try Again")
+
+    class NextChapt(Welcome):
+        """掌管下一章节界面的类"""
+        def __init__(self, deos_game):
+            """初始化与欢迎界面完全一致"""
+            super().__init__(deos_game)
+            self.deos_game = deos_game
+
+        def create_play_button(self):
+            """重写play_button为try_again"""
+            self.play_button = Button(self, self.settings.play_button_width,
+                                      self.settings.play_button_height,
+                                      self.settings.play_button_color,
+                                      self.settings.play_color,
+                                      self.settings.play_font,
+                                      self.settings.play_size, "Next Chapter")
 
 
     class MainGame:

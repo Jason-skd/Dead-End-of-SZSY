@@ -19,9 +19,6 @@ class Settings:
         # self.bg_color = (33, 40, 118)
         self.bg_image = 'images/bg - 1.jpg'
 
-        # 声音设置
-        self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
-
         # heroes设置
         self.heroes_width = 27 * 1.5
         self.heroes_height = 39.5 * 1.5
@@ -37,8 +34,6 @@ class Settings:
 
         # enemies设置
         self.simple_enemy_width = 20
-        self.simple_enemy_color = (255, 248, 125)
-        self.simple_enemy_speed = 1
         self.simple_enemy_harm = 8
         self.simple_enemy_hurt_blank = 0.5
 
@@ -63,22 +58,31 @@ class Settings:
         self.blood_bar_border_width = 3
 
         # 关卡设置
+        self.simple_enemy_speed = 1
         self.simple_enemy_number = 10
         self.simple_enemy_wave = 5
         self.simple_enemy_prod_blank = 5
-        self.chap_head = None
+        self.simple_enemy_color = (255, 248, 125)
+
+        self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
 
 
     def chap_1(self):
         """广播：将进行chap_1"""
+        self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
         self.bg_image = 'images/bg - 1.jpg'
         self.simple_enemy_number = 10
-        self.simple_enemy_wave = 5
+        self.simple_enemy_wave = 7
+        self.simple_enemy_speed = 1
+        self.simple_enemy_color = (255, 248, 125)
         self.chap_head = None
 
     def chap_2(self):
         """广播：将进行chap_1"""
-        self.bg_image = 'images/bg - 1.jpg'
-        self.simple_enemy_number = 15
-        self.simple_enemy_wave = 7
+        self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
+        self.bg_image = 'images/bg - 2.jpg'
+        self.simple_enemy_number = 20
+        self.simple_enemy_wave = 5
+        self.simple_enemy_speed = 1.5
+        self.simple_enemy_color = (100, 248, 200)
         self.chap_head = 'gh'

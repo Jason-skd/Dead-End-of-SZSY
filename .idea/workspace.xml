@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="bug">
+    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="chapter1 finish!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -220,7 +219,23 @@
       <option name="project" value="LOCAL" />
       <updated>1751620659266</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="chapter1 finish!">
+      <option name="closed" value="true" />
+      <created>1751624158220</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1751624158220</updated>
+    </task>
+    <task id="LOCAL-00018" summary="chapter1 finish!">
+      <option name="closed" value="true" />
+      <created>1751624202467</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1751624202467</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -240,6 +255,7 @@
     <MESSAGE value="finish hurt" />
     <MESSAGE value="waves of sp_enemy" />
     <MESSAGE value="bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug" />
+    <MESSAGE value="chapter1 finish!" />
+    <option name="LAST_COMMIT_MESSAGE" value="chapter1 finish!" />
   </component>
 </project>
