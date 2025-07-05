@@ -54,21 +54,6 @@ class DeadEndOfSZSY:
                         break
                     break
 
-        while True:
-            with self.GameSession(self, 3) as game:
-                result = game.host_game()
-                if result == "Defeat":
-                    # 直到点击才重新开始本章
-                    while self.Defeat(self).run():
-                        break
-                    continue
-                elif result == "Victory":
-                    # 直到点击才开始下一章
-                    while self.NextChapt(self).run():
-                        break
-                    break
-
-
     class GameSession:
         """使用上下文管理器管理游戏资源"""
 
@@ -193,8 +178,8 @@ class DeadEndOfSZSY:
                 self.settings.chap_1()
             elif chap == 2:
                 self.settings.chap_2()
-            elif chap == 3:
-                self.settings.chap_3()
+
+
             self.head_name = self.settings.chap_head
 
 
@@ -244,7 +229,14 @@ class DeadEndOfSZSY:
                 self._check_events()
 
                 # 游戏逻辑更新
-                self.prod_sp_enemy_waves.check_prod()
+                # false 就一直check
+                if self.prod_sp_enemy_waves.check_prod():
+                    if self.settings.sp_inf:
+                        self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(
+                            self, self.settings.inf_simple_enemy_wave,
+                            self.settings.inf_simple_enemy_prod_blank,
+                            self.settings.inf_simple_enemy_number)
+
                 self.hero.update()
                 self._update_simple_enemies()
                 self._bullet_launcher()
@@ -284,7 +276,7 @@ class DeadEndOfSZSY:
 
         def _check_victory(self):
             """检查是否胜利（击败所有敌人）"""
-            if not self.enemies_for_target:
+            if not self.enemies_for_target and self.head_exist:
                 return True
             return False
 
@@ -374,6 +366,7 @@ class DeadEndOfSZSY:
             def __init__(self, deos_game, waves, blank, number):
                 """初始化设定的间隔、当前间隔、当前波次"""
                 self.deos_game = deos_game
+                self.settings = deos_game.settings
                 self.waves = waves
                 self.number = number
                 self.blank = blank * 60
@@ -391,9 +384,15 @@ class DeadEndOfSZSY:
                     else:
                         self.current_blank += 1
 
+                    # 未完成
+                    return False
+
                 else:
                     if not self.deos_game.head_exist and self.deos_game.head_name:
                         self.deos_game.prod_head()
+
+                    # 完成，return True
+                    return True
 
         class HeadSkillManage(ManageSimpleEnemyWaves):
             """计算头目技能时机"""
@@ -521,18 +520,22 @@ class DeadEndOfSZSY:
             """绘制屏幕"""
             # 用纯色填充背景
             self.screen.blit(self.bg, self.screen_rect)
+
             for bullet in self.bullets:
                 bullet.draw_bullet()
+
             self.hero.blitme()
-            for enemy in self.simple_enemies:
-                enemy.draw_enemy()
-            self.hero_blood_bar.draw_blood_blank()
-            self.hero_blood_bar.draw_blood_bar(self.hero_blood)
 
             if self.head_exist:
                 self.gh.draw_enemy()
                 self.gh_blood_bar.draw_blood_blank()
                 self.gh_blood_bar.draw_blood_bar(self.gh_blood)
+
+            for enemy in self.simple_enemies:
+                enemy.draw_enemy()
+
+            self.hero_blood_bar.draw_blood_blank()
+            self.hero_blood_bar.draw_blood_bar(self.hero_blood)
 
             pygame.display.flip()
 
