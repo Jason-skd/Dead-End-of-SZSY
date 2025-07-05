@@ -83,7 +83,7 @@ class Settings:
         self.simple_enemy_number = 5
         self.simple_enemy_wave = 2
         self.simple_enemy_speed = 1.5
-        self.simple_enemy_prod_blank = 5
+        self.simple_enemy_prod_blank = 10
         # sp的图像
         self.sp_1 = 'images/sp - 1.jpg'
         self.sp_2 = 'images/sp - 2.jpg'

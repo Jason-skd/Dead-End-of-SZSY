@@ -209,6 +209,7 @@ class DeadEndOfSZSY:
             self.hero_hurt = 0
             self.hero_blood_bar = BloodBar(self, self.hero, self.hero_blood_max, self.settings.blood_bar_width)
             self.hero.center_hero()
+            self.prod_waves_complete = False
 
             self.head_exist = False
             # 跳脸
@@ -230,7 +231,8 @@ class DeadEndOfSZSY:
 
                 # 游戏逻辑更新
                 # false 就一直check
-                if self.prod_sp_enemy_waves.check_prod():
+                self.prod_waves_complete = self.prod_sp_enemy_waves.check_prod()
+                if self.prod_waves_complete:
                     if self.settings.sp_inf:
                         self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(
                             self, self.settings.inf_simple_enemy_wave,
@@ -276,7 +278,7 @@ class DeadEndOfSZSY:
 
         def _check_victory(self):
             """检查是否胜利（击败所有敌人）"""
-            if not self.enemies_for_target:
+            if not self.enemies_for_target and self.prod_waves_complete:
                 if self.settings.chap_head is None or self.head_exist:
                     return True
             return False
@@ -511,7 +513,7 @@ class DeadEndOfSZSY:
 
         def gh_jump_face(self):
             image = pygame.image.load(self.settings.gh_face)
-            image = pygame.transform.scale(image, (716, 810))
+            image = pygame.transform.scale(image, (1074, 1215))
             rect = image.get_rect()
 
             rect.center = self.screen_rect.center
