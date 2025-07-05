@@ -1,10 +1,11 @@
 import pygame
 
-class Sgzy:
+class Sgzy(pygame.sprite.Sprite):
     """管理 Sgzy的类"""
 
     def __init__(self, deos_game):
         """初始化Sgzy"""
+        super().__init__()
         self.screen = deos_game.screen
         self.screen_rect = deos_game.screen.get_rect()
 
@@ -28,11 +29,15 @@ class Sgzy:
 
         self.image = self.normal_image
 
+        self.move_can = True
+
         # 移动标志
         self.moving_right = False
         self.moving_left = False
         self.moving_up = False
         self.moving_down = False
+
+        self.speed = self.settings.heroes_speed
 
         # hurt标志
         self.hurt = False
@@ -47,17 +52,18 @@ class Sgzy:
 
     def update(self):
         """刷新sgzy的状态"""
-        if self.moving_right and self.rect.right + self.width < self.screen_rect.right:
-            self.rect.x += self.settings.heroes_speed
-        if self.moving_left and self.rect.left - self.width > self.screen_rect.left:
-            self.rect.x -= self.settings.heroes_speed
-        if (self.moving_up and self.rect.top -
-                (self.height + self.settings.blood_bar_height + self.settings.blood_bar_pos_height)
-                > self.screen_rect.top):
-            self.rect.y -= self.settings.heroes_speed
-        if self.moving_down and self.rect.bottom + self.height < self.screen_rect.bottom:
-            self.rect.y += self.settings.heroes_speed
+        if self.move_can:
+            if self.moving_right and self.rect.right + self.width < self.screen_rect.right:
+                self.rect.x += self.speed
+            if self.moving_left and self.rect.left - self.width > self.screen_rect.left:
+                self.rect.x -= self.speed
+            if (self.moving_up and self.rect.top -
+                    (self.height + self.settings.blood_bar_height + self.settings.blood_bar_pos_height)
+                    > self.screen_rect.top):
+                self.rect.y -= self.speed
+            if self.moving_down and self.rect.bottom + self.height < self.screen_rect.bottom:
+                self.rect.y += self.speed
 
-        if self.hurt:
-            self.image = self.hurt_image
-        else: self.image = self.normal_image
+            if self.hurt:
+                self.image = self.hurt_image
+            else: self.image = self.normal_image

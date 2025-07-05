@@ -36,6 +36,9 @@ class Settings:
         # 受伤变脸的时间
         self.hurt_time = 0.5
 
+        # 受击加速
+        self.hero_hurt_speed_up = 2
+
         # enemies设置
         self.simple_enemy_width = 20
         self.simple_enemy_harm = 5
@@ -48,14 +51,19 @@ class Settings:
         self.gh_image = 'images/gh.jpg'
         self.gh_width = 132.3
         self.gh_height = 151.8
-        self.gh_skill_blank = 15
+        self.gh_skill_blank = 5
         self.gh_face = 'images/gh_face.jpg'
         self.jump_face_sound = 'bgm/jump_face.wav'
 
         # 技能
         self.carrot_width = 40
-        self.carrot_nor = 'images/carrot - 1.jpg'
-        self.carrot_prep = 'images/carrot - 2.jpg'
+        self.carrot_nor = 'images/carrot - 1.png'
+        self.carrot_prep = 'images/carrot - 2.png'
+        self.carrot_flying_duration = 3
+        self.carrot_numb = 8
+        self.carrot_speed = 2
+        self.carrot_dominate = 1
+        self.car_speed_up = 4
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5
@@ -101,10 +109,10 @@ class Settings:
         self.bg_image = 'images/bg - 3.jpg'
 
         # 无限前
-        self.simple_enemy_number = 10
+        self.simple_enemy_number = 1
         self.simple_enemy_wave = 5
         self.simple_enemy_speed = 1.2
-        self.simple_enemy_prod_blank = 3
+        self.simple_enemy_prod_blank = 1
         # sp的图像
         self.sp_1 = 'images/sp - 5.jpg'
         self.sp_2 = 'images/sp - 6.jpg'

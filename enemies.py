@@ -123,13 +123,36 @@ class Gh(SimpleEnemy):
 
         self.speed = self.settings.gh_speed
 
-    def carrot(self):
+        # 初始化技能
+        self.carrots = pygame.sprite.Group()
+        self.carrot_nor_image = pygame.image.load(self.settings.carrot_nor)
+        self.carrot_nor_image = pygame.transform.scale(self.carrot_nor_image,
+                                                     (self.settings.carrot_width, self.settings.carrot_width))
+        self.carrot_prep_image = pygame.image.load(self.settings.carrot_prep)
+        self.carrot_prep_image = pygame.transform.scale(self.carrot_prep_image,
+                                                      (self.settings.carrot_width, self.settings.carrot_width))
+
+    def carrot(self, number, speed):
         """gh技能：拔出萝卜带出泥"""
-        pass
+
+        # 计算弧度
+        for order in range(number):
+            degree = 360 / number * order
+            degree = math.radians(degree)
+
+            sin = math.sin(degree)
+            cos = math.cos(degree)
+
+            # 分解速度
+            dx = speed * sin
+            dy = speed * cos
+
+            current_carrot = self.Carrot(self.deos_game, self, dx, dy, self.carrot_nor_image, self.carrot_prep_image)
+            self.carrots.add(current_carrot)
 
     class Carrot(pygame.sprite.Sprite):
         """拔出萝卜带出泥的萝卜"""
-        def __init__(self, deos_game, user):
+        def __init__(self, deos_game, user, dx, dy, nor_image, prep_image):
             """初始化萝卜"""
             super().__init__()
             self.deos_game = deos_game
@@ -137,17 +160,73 @@ class Gh(SimpleEnemy):
             self.settings = deos_game.settings
             self.user = user
 
+            # 每秒要移动的距离
+            self.dx = dx
+            self.dy = dy
+
             self.width  = self.settings.carrot_width
 
-            self.nor_image = pygame.image.load(self.settings.carrot_nor)
-            self.nor_image = pygame.transform.scale(self.nor_image, (self.width, self.width))
-            self.prep_image = pygame.image.load(self.settings.carrot_prep)
-            self.prep_image = pygame.transform.scale(self.prep_image, (self.width, self.width))
+            self.nor_image = nor_image
+            self.prep_image = prep_image
 
             # 初始状态是nor
             self.image = self.nor_image
             self.rect = self.image.get_rect(center=(user.rect.x, user.rect.y))
+            # 储存浮点坐标
+            self.x = float(self.rect.x)
+            self.y = float(self.rect.y)
+
+            # 飞行帧数
+            self.flying_duration = self.settings.carrot_flying_duration * 60
+
+            # 初始化计时
+            self.tick = 0
+
+            # 胡萝卜命中计时
+            self.carrot_hit_tik = 0
+            self.hit = False
+
+        def update(self):
+            if self.tick < self.flying_duration:
+                self.tick += 1
+                self.x += self.dx  # 更新浮点数坐标
+                self.y += self.dy
+                self.rect.x = int(self.x)  # 取整赋值给 rect
+                self.rect.y = int(self.y)
+
+            else:
+                if self.image != self.prep_image:
+                    self.image = self.prep_image
+            if self.hit:
+                self.dominate_duration_manage()
+
+        def dominate_duration_manage(self):
+            if self.carrot_hit_tik >= self.settings.carrot_dominate * 60:
+                self.deos_game.hero.move_can = True
+                # 重置计时
+                self.carrot_hit_tik = 0
+                # 恢复gh速度
+                self.user.speed /= self.settings.car_speed_up
+                self.user.carrots.remove(self)
+            else:
+                self.carrot_hit_tik += 1
+
+        def draw_carrot(self):
+            """在屏幕上绘制carrot"""
+            self.screen.blit(self.image, self.rect)
 
     def draw_enemy(self):
-        """在屏幕上绘制gh"""
+        """在屏幕上绘制gh和技能"""
         self.screen.blit(self.image, self.rect)
+
+        # 绘制技能
+        for carrot in self.carrots:
+            carrot.draw_carrot()
+
+    def update(self, target):
+        super().update(target)
+
+        # 技能刷新
+        for carrot in self.carrots:
+            carrot.update()
+

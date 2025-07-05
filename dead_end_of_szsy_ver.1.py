@@ -26,19 +26,19 @@ class DeadEndOfSZSY:
         while not self.Welcome(self).run():
             break
 
-        while True:
-            with self.GameSession(self, 1) as game:
-                result = game.host_game()
-                if result == "Defeat":
-                    # 直到点击才重新开始本章
-                    while self.Defeat(self).run():
-                        break
-                    continue
-                elif result == "Victory":
-                    # 直到点击才开始下一章
-                    while self.NextChapt(self).run():
-                        break
-                    break
+        # while True:
+        #     with self.GameSession(self, 1) as game:
+        #         result = game.host_game()
+        #         if result == "Defeat":
+        #             # 直到点击才重新开始本章
+        #             while self.Defeat(self).run():
+        #                 break
+        #             continue
+        #         elif result == "Victory":
+        #             # 直到点击才开始下一章
+        #             while self.NextChapt(self).run():
+        #                 break
+        #             break
 
         while True:
             with self.GameSession(self, 2) as game:
@@ -199,6 +199,8 @@ class DeadEndOfSZSY:
             self.bullets = pygame.sprite.Group()
             self.enemies_for_target = pygame.sprite.Group()
             self.clock = pygame.time.Clock()
+            self.hero_group = pygame.sprite.Group()
+            self.hero_group.add(self.hero)
 
             # 初始化游戏状态
             self.bullet_counter = self.settings.bullet_fire_blanking
@@ -206,6 +208,7 @@ class DeadEndOfSZSY:
             self.hurt_count_start = False
             self.hero_blood_max = self.settings.sgzy_blood
             self.hero_blood = self.hero_blood_max
+            # hero本帧要扣的血
             self.hero_hurt = 0
             self.hero_blood_bar = BloodBar(self, self.hero, self.hero_blood_max, self.settings.blood_bar_width)
             self.hero.center_hero()
@@ -244,13 +247,14 @@ class DeadEndOfSZSY:
                 self._bullet_launcher()
                 self._update_bullet()
                 self.hero_blood_bar.update()
-                self._hero_hurt_animation()
+                self._check_hero_hurt()
                 if self.head_exist:
                     self.gh.update(self.hero)
                     self._check_bullet_head_collisions()
                     self.gh_blood_bar.update()
                     self.head_hurt_manage()
                     self.gh_skill_manage.check_prod()
+                    self._check_carrots_hero_collisions()
 
 
                 # 检查游戏状态
@@ -417,11 +421,14 @@ class DeadEndOfSZSY:
 
             def prod_skill(self):
                 """随机产生技能"""
-                while self.current_skill != self.last_skill:
-                    self.current_skill = random.randint(1, 2)  # 有几种技能
+                while self.current_skill == self.last_skill:
+                    # self.current_skill = random.randint(1, 2)  # 有几种技能
+                    self.current_skill = 1
 
                 if self.current_skill == 1:
-                    pass
+                    # 从1到最大胡萝卜数量发射
+                    self.deos_game.gh.carrot(random.randint(1, self.settings.carrot_numb)
+                                             , self.settings.carrot_speed)
                 elif self.current_skill == 2:
                     pass
 
@@ -495,20 +502,30 @@ class DeadEndOfSZSY:
                 self.gh_hurt += 1
                 collisions = None
 
-        def _hero_hurt_animation(self):
-            """响应hero受到simple_enemy攻击"""
+        def _check_carrots_hero_collisions(self):
+            """萝卜是否与hero相碰"""
+            for carrot in self.gh.carrots:
+                if pygame.sprite.collide_rect(carrot, self.hero) and carrot.hit is False:
+                    self.hero.move_can = False
+                    carrot.hit = True
+                    self.gh.speed *= self.settings.car_speed_up
+
+        def _check_hero_hurt(self):
+            """响应hero受到攻击"""
             # 如果变脸了，读秒
             if self.hurt_count_start:
                 self.hurt_counter += 1
-            # 如果受击了，变脸
-            if pygame.sprite.spritecollideany(self.hero, self.simple_enemies):
+            # 如果受击了，变脸并加速
+            if self.hero_hurt != 0:
                 self.hero.hurt = True
+                self.hero.speed *= self.settings.hero_hurt_speed_up
                 # 重置并开始读秒
                 self.hurt_counter = 0
                 self.hurt_count_start = True
             # 如果读秒满了，变脸变回
             if self.hurt_counter == self.settings.hurt_time * 60:
                 self.hero.hurt = False
+                self.hero.speed = self.settings.heroes_speed
                 self.hurt_count_start = False
 
         def gh_jump_face(self):
@@ -527,12 +544,13 @@ class DeadEndOfSZSY:
             for bullet in self.bullets:
                 bullet.draw_bullet()
 
-            self.hero.blitme()
-
             if self.head_exist:
                 self.gh.draw_enemy()
                 self.gh_blood_bar.draw_blood_blank()
                 self.gh_blood_bar.draw_blood_bar(self.gh_blood)
+
+
+            self.hero.blitme()
 
             for enemy in self.simple_enemies:
                 enemy.draw_enemy()
