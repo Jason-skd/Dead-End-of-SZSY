@@ -38,7 +38,7 @@ class Settings:
 
         # enemies设置
         self.simple_enemy_width = 20
-        self.simple_enemy_harm = 8
+        self.simple_enemy_harm = 5
         self.simple_enemy_hurt_blank = 0.5
 
         self.gh_speed = 0.5
@@ -69,42 +69,48 @@ class Settings:
         self.gh_blood_bar_color = (200, 0, 50)
 
         # 关卡设置
-        self.simple_enemy_speed = 1
-        self.simple_enemy_number = 10
-        self.simple_enemy_wave = 5
-        self.simple_enemy_prod_blank = 5
-        self.simple_enemy_color = (255, 248, 125)
-        self.chap_head = None
-
-        self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
-
 
     def chap_1(self):
         """广播：将进行chap_1"""
-        self.bgm = "bgm/Only_Gwen - 【大厅】S2惊奇游乐园 S3疯狂马戏团5【共用音乐】.mp3"
-        self.bg_image = 'images/bg - 1.jpg'
-        self.simple_enemy_number = 10
-        self.simple_enemy_wave = 3
-        self.simple_enemy_speed = 1
-        self.simple_enemy_color = (255, 248, 125)
+        self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
+        self.bg_image = 'images/bg - 2.jpg'
+
+        self.simple_enemy_number = 20
+        self.simple_enemy_wave = 7
+        self.simple_enemy_speed = 1.5
+        self.simple_enemy_prod_blank = 5
+        # sp的图像
+        self.sp_1 = 'images/sp - 1.jpg'
+        self.sp_2 = 'images/sp - 2.jpg'
+        self.sp_3 = 'images/sp - 3.jpg'
+        self.sp_4 = 'images/sp - 4.jpg'
+
+        # 源源不断地小兵
+        self.sp_inf = False
+
         self.chap_head = None
 
     def chap_2(self):
         """广播：将进行chap_2"""
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
-        self.bg_image = 'images/bg - 2.jpg'
-        self.simple_enemy_number = 10
-        self.simple_enemy_wave = 3
-        self.simple_enemy_speed = 1.5
-        self.simple_enemy_color = (100, 248, 200)
-        self.chap_head = None
-
-    def chap_3(self):
-        """广播：将进行chap_3"""
-        self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 3.jpg'
+
+        # 无限前
         self.simple_enemy_number = 10
-        self.simple_enemy_wave = 3
-        self.simple_enemy_speed = 1.5
-        self.simple_enemy_color = (100, 248, 200)
+        self.simple_enemy_wave = 5
+        self.simple_enemy_speed = 1.2
+        self.simple_enemy_prod_blank = 3
+        # sp的图像
+        self.sp_1 = 'images/sp - 5.jpg'
+        self.sp_2 = 'images/sp - 6.jpg'
+        self.sp_3 = 'images/sp - 7.jpg'
+        self.sp_4 = 'images/sp - 8.jpg'
+
+        # 源源不断的小兵
+        self.sp_inf = True
+        # 无限后
+        self.inf_simple_enemy_number = 5
+        self.inf_simple_enemy_wave = 3
+        self.inf_simple_enemy_prod_blank = 10
+
         self.chap_head = 'gh'

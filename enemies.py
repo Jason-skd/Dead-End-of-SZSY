@@ -1,4 +1,4 @@
-import math
+import math, random
 
 import pygame
 
@@ -17,11 +17,17 @@ class SimpleEnemy(pygame.sprite.Sprite):
         self.settings = deos_game.settings
 
         self.width = self.settings.simple_enemy_width
-        self.color = self.settings.simple_enemy_color
 
-        #在0, 0处添加一个simpl_enemy，再放到指定pos
-        self.rect = pygame.Rect(0, 0, self.width, self.width, )
-        self.rect.center = (pos_x, pos_y)
+        #在0, 0处加载图片，随机选择一张，再放到指定位置
+        image_1 = pygame.image.load(self.settings.sp_1)
+        image_2 = pygame.image.load(self.settings.sp_2)
+        image_3 = pygame.image.load(self.settings.sp_3)
+        image_4 = pygame.image.load(self.settings.sp_4)
+
+        images_choice = [image_1, image_2, image_3, image_4]
+        self.image = images_choice[random.randint(0,3)]
+        self.image = pygame.transform.scale(self.image, (self.width, self.width))
+        self.rect = self.image.get_rect(center=(pos_x, pos_y))
 
         self.speed = self.settings.simple_enemy_speed
 
@@ -43,7 +49,7 @@ class SimpleEnemy(pygame.sprite.Sprite):
 
     def draw_enemy(self):
         """在屏幕上绘制simple_enemy"""
-        pygame.draw.rect(self.screen, self.color, self.rect)
+        self.screen.blit(self.image, self.rect)
 
     def update(self, target):
         """更新状态"""
@@ -101,9 +107,12 @@ class Gh(SimpleEnemy):
         super().__init__(deos_game, pos_x, pos_y)
         self.deos_game = deos_game
 
+        self.width = self.settings.gh_width
+        self.height = self.settings.gh_height
+
         # 加载图片并缩放
         self.image = pygame.image.load(self.settings.gh_image)
-        self.image = pygame.transform.scale(self.image, (self.settings.gh_width, self.settings.gh_height))
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
         self.rect = self.image.get_rect(center=(pos_x, pos_y))
 
         # 伤害
