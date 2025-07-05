@@ -127,6 +127,27 @@ class Gh(SimpleEnemy):
         """gh技能：拔出萝卜带出泥"""
         pass
 
+    class Carrot(pygame.sprite.Sprite):
+        """拔出萝卜带出泥的萝卜"""
+        def __init__(self, deos_game, user):
+            """初始化萝卜"""
+            super().__init__()
+            self.deos_game = deos_game
+            self.screen = deos_game.screen
+            self.settings = deos_game.settings
+            self.user = user
+
+            self.width  = self.settings.carrot_width
+
+            self.nor_image = pygame.image.load(self.settings.carrot_nor)
+            self.nor_image = pygame.transform.scale(self.nor_image, (self.width, self.width))
+            self.prep_image = pygame.image.load(self.settings.carrot_prep)
+            self.prep_image = pygame.transform.scale(self.prep_image, (self.width, self.width))
+
+            # 初始状态是nor
+            self.image = self.nor_image
+            self.rect = self.image.get_rect(center=(user.rect.x, user.rect.y))
+
     def draw_enemy(self):
         """在屏幕上绘制gh"""
         self.screen.blit(self.image, self.rect)

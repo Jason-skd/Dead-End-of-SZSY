@@ -121,7 +121,7 @@ class DeadEndOfSZSY:
                 self.play_clicked = True  # 修改：标记为已点击
 
         def _update_screen(self):
-            self.screen.fill((0, 0, 0))
+            self.screen.fill(self.settings.bg_color)
             self.play_button.draw_button()
 
             # 让最近绘制的屏幕可见
@@ -276,8 +276,9 @@ class DeadEndOfSZSY:
 
         def _check_victory(self):
             """检查是否胜利（击败所有敌人）"""
-            if not self.enemies_for_target and self.head_exist:
-                return True
+            if not self.enemies_for_target:
+                if self.settings.chap_head is None or self.head_exist:
+                    return True
             return False
 
         def hurt_manage(self):

@@ -20,12 +20,12 @@ class Settings:
         self.play_size = 60
 
         # 背景设置
-        # self.bg_color = (33, 40, 118)
+        self.bg_color = (33, 40, 118)
         self.bg_image = 'images/bg - 1.jpg'
 
         # heroes设置
-        self.heroes_width = 27 * 1.5
-        self.heroes_height = 39.5 * 1.5
+        self.heroes_width = 40.5
+        self.heroes_height = 59.25
         self.heroes_speed = 2
 
         self.sgzy_normal_image = 'images/sgzy - normal.jpg'
@@ -46,11 +46,16 @@ class Settings:
         self.gh_blood = 120
         self.gh_hurt_blank = 1
         self.gh_image = 'images/gh.jpg'
-        self.gh_width = 441 * 0.3
-        self.gh_height = 506 * 0.3
+        self.gh_width = 132.3
+        self.gh_height = 151.8
         self.gh_skill_blank = 15
         self.gh_face = 'images/gh_face.jpg'
         self.jump_face_sound = 'bgm/jump_face.wav'
+
+        # 技能
+        self.carrot_width = 40
+        self.carrot_nor = 'images/carrot - 1.jpg'
+        self.carrot_prep = 'images/carrot - 2.jpg'
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5
@@ -75,8 +80,8 @@ class Settings:
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 2.jpg'
 
-        self.simple_enemy_number = 20
-        self.simple_enemy_wave = 7
+        self.simple_enemy_number = 5
+        self.simple_enemy_wave = 2
         self.simple_enemy_speed = 1.5
         self.simple_enemy_prod_blank = 5
         # sp的图像
@@ -92,7 +97,7 @@ class Settings:
 
     def chap_2(self):
         """广播：将进行chap_2"""
-        self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
+        self.bgm = "bgm/BLESSED MANE - Death Is No More.mp3"
         self.bg_image = 'images/bg - 3.jpg'
 
         # 无限前
