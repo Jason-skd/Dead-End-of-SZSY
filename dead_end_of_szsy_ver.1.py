@@ -6,6 +6,7 @@ import enemies
 from bullet import Bullet
 from blood_bar import BloodBar
 from button import Button
+from surface import CreateSurface
 
 
 class DeadEndOfSZSY:
@@ -14,6 +15,7 @@ class DeadEndOfSZSY:
     def __init__(self):
         """初始化游戏"""
         pygame.init()
+        # 停用中文输入
         pygame.key.stop_text_input()
         self.settings = Settings()
         pygame.display.set_caption("实验的末路")
@@ -26,22 +28,8 @@ class DeadEndOfSZSY:
         while not self.Welcome(self).run():
             break
 
-        # while True:
-        #     with self.GameSession(self, 1) as game:
-        #         result = game.host_game()
-        #         if result == "Defeat":
-        #             # 直到点击才重新开始本章
-        #             while self.Defeat(self).run():
-        #                 break
-        #             continue
-        #         elif result == "Victory":
-        #             # 直到点击才开始下一章
-        #             while self.NextChapt(self).run():
-        #                 break
-        #             break
-
         while True:
-            with self.GameSession(self, 2) as game:
+            with self.GameSession(self, 1) as game:
                 result = game.host_game()
                 if result == "Defeat":
                     # 直到点击才重新开始本章
@@ -50,7 +38,22 @@ class DeadEndOfSZSY:
                     continue
                 elif result == "Victory":
                     # 直到点击才开始下一章
-                    while self.NextChapt(self).run():
+                    while self.NextChapt(self, "2").run():
+                        break
+                    break
+
+        while True:
+            with self.GameSession(self, 2) as game:
+                result = game.host_game()
+                if result == "Defeat":
+                    # 直到点击才重新开始本章
+                    while self.Defeat(self).run():
+                        break
+                    # 重新开始本章游戏
+                    continue
+                elif result == "Victory":
+                    # 直到点击才开始下一章
+                    while self.NextChapt(self, "win").run():
                         break
                     break
 
@@ -60,6 +63,7 @@ class DeadEndOfSZSY:
         def __init__(self, deos_game, chap):
             self.deos_game = deos_game
             self.chap = chap
+            # 游戏实例初始化
             self.game_instance = None
 
         def __enter__(self):
@@ -74,29 +78,32 @@ class DeadEndOfSZSY:
                 self.game_instance.bullets.empty()
                 self.game_instance.simple_enemies.empty()
                 self.game_instance.enemies_for_target.empty()
+                self.game_instance.hero_group.empty()
                 # 重置游戏状态（避免章节间污染）
                 self.deos_game.hero_blood = self.deos_game.settings.sgzy_blood
-                self.deos_game.hero_hurt = 0
+                # self.deos_game.hero_hurt = 0
             return False  # 不抑制异常
 
-    class Welcome:
+    class Interface:
         """掌管欢迎界面的类"""
         def __init__(self, deos_game):
             """引入并初始化"""
             self.screen = deos_game.screen
             self.screen_rect = deos_game.screen_rect
             self.settings = deos_game.settings
-            self.play_clicked = False  # 新增：标记是否点击了Play按钮
+            self.bg = pygame.image.load(self.settings.interface_bg)
+            # 标记按钮是否被点击
+            self.play_clicked = False
 
         def run(self):
-            """运行欢迎界面，返回是否点击了Play按钮"""
-            while not self.play_clicked:  # 修改：条件变为检查play_clicked
-                self.create_play_button()
+            """运行欢迎界面，点击了button返回True"""
+            while not self.play_clicked:
+                self._create_play_button()
                 self._check_events()
                 self._update_screen()
-            return True  # 点击Play后返回True
+            return True
 
-        def create_play_button(self):
+        def _create_play_button(self):
             self.play_button = Button(self, self.settings.play_button_width,
                                       self.settings.play_button_height,
                                       self.settings.play_button_x,
@@ -118,23 +125,50 @@ class DeadEndOfSZSY:
         def _check_play_button(self, mouse_pos):
             """检查是否点击了Play按钮"""
             if self.play_button.rect.collidepoint(mouse_pos):
-                self.play_clicked = True  # 修改：标记为已点击
+                self.play_clicked = True
 
         def _update_screen(self):
-            self.screen.fill(self.settings.bg_color)
+            """绘制屏幕"""
+            self.screen.blit(self.bg, self.screen_rect)
             self.play_button.draw_button()
 
             # 让最近绘制的屏幕可见
             pygame.display.flip()
 
-    class Defeat(Welcome):
+    class Welcome(Interface):
+        """欢迎界面"""
+        def __init__(self, deos_game):
+            """初始化"""
+            super().__init__(deos_game)
+            self.logo = CreateSurface(deos, self.screen_rect.centerx,
+                                      self.screen_rect.centery + self.settings.logo_center_height)
+
+        def run(self):
+            while not self.play_clicked:
+                self._create_play_button()
+                self._create_logo()
+                self._check_events()
+                self._update_screen()
+            return True
+        def _create_logo(self):
+            self.logo.image_surface(self.settings.logo, (self.settings.logo_width, self.settings.logo_height))
+
+        def _update_screen(self):
+            self.screen.blit(self.bg, self.screen_rect)
+            self.play_button.draw_button()
+            self.logo.blitme()
+
+            # 让最近绘制的屏幕可见
+            pygame.display.flip()
+
+    class Defeat(Interface):
         """掌管失败界面的类"""
         def __init__(self, deos_game):
             """初始化与欢迎界面完全一致"""
             super().__init__(deos_game)
             self.deos_game = deos_game
 
-        def create_play_button(self):
+        def _create_play_button(self):
             """重写play_button为try_again"""
             self.play_button = Button(self, self.settings.play_button_width,
                                       self.settings.play_button_height,
@@ -145,15 +179,17 @@ class DeadEndOfSZSY:
                                       self.settings.play_font,
                                       self.settings.play_size, "Try Again")
 
-    class NextChapt(Welcome):
+    class NextChapt(Interface):
         """掌管下一章节界面的类"""
-        def __init__(self, deos_game):
+        def __init__(self, deos_game, next_chap):
             """初始化与欢迎界面完全一致"""
             super().__init__(deos_game)
             self.deos_game = deos_game
+            self.chapter_msg = CreateSurface(deos_game)
+            self.next_chap = next_chap
 
-        def create_play_button(self):
-            """重写play_button为try_again"""
+        def _create_play_button(self):
+            """重写play_button为Enter!"""
             self.play_button = Button(self, self.settings.play_button_width,
                                       self.settings.play_button_height,
                                       self.settings.play_button_x,
@@ -161,7 +197,29 @@ class DeadEndOfSZSY:
                                       self.settings.play_button_color,
                                       self.settings.play_color,
                                       self.settings.play_font,
-                                      self.settings.play_size, "Next Chapter")
+                                      self.settings.play_size, "Enter!")
+
+        def _create_next_chap_msg(self):
+            self.chapter_msg.text_surface(70, f"Next: chapter. {self.next_chap}")
+            self.chapter_msg.rect.top = self.screen_rect.top + self.settings.nx_chap_top_dist
+            self.chapter_msg.rect.centerx = self.screen_rect.centerx
+
+        def run(self):
+            """点击按钮返回True"""
+            while not self.play_clicked:
+                self._create_play_button()
+                self._create_next_chap_msg()
+                self._check_events()
+                self._update_screen()
+            return True
+
+        def _update_screen(self):
+            self.screen.blit(self.bg, self.screen_rect)
+            self.play_button.draw_button()
+            self.chapter_msg.blitme()
+
+            # 让最近绘制的屏幕可见
+            pygame.display.flip()
 
 
     class MainGame:
@@ -518,7 +576,7 @@ class DeadEndOfSZSY:
             # 如果受击了，变脸并加速
             if self.hero_hurt != 0:
                 self.hero.hurt = True
-                self.hero.speed *= self.settings.hero_hurt_speed_up
+                self.hero.speed = self.settings.hero_hurt_speed_up * self.settings.heroes_speed
                 # 重置并开始读秒
                 self.hurt_counter = 0
                 self.hurt_count_start = True

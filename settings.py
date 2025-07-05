@@ -11,16 +11,25 @@ class Settings:
         self.bgm_volume = 0.3
 
         # 欢迎界面设置
+        # logo偏离中心高度
+        self.logo = 'images/logo.png'
+        self.logo_center_height = -100
+        self.logo_width = 559
+        self.logo_height = 583
         # 按钮设置
         self.play_button_width, self.play_button_height = 300, 100
-        self.play_button_x, self.play_button_y = 960, 740
-        self.play_button_color = (50, 200, 200)
+        self.play_button_x, self.play_button_y = 960, 840
+        self.play_button_color = (191, 0, 0)
         self.play_color = (255, 255, 255)
         self.play_font = None
-        self.play_size = 60
+        self.play_size = 100
+
+        # 章节广播设置
+        self.nx_chap_top_dist = 150
 
         # 背景设置
         self.bg_color = (33, 40, 118)
+        self.interface_bg = 'images/bg.png'
         self.bg_image = 'images/bg - 1.jpg'
 
         # heroes设置
@@ -62,7 +71,7 @@ class Settings:
         self.carrot_flying_duration = 3
         self.carrot_numb = 8
         self.carrot_speed = 2
-        self.carrot_dominate = 1
+        self.carrot_dominate = 1.5
         self.car_speed_up = 4
 
         # bullet 设置
@@ -86,7 +95,7 @@ class Settings:
     def chap_1(self):
         """广播：将进行chap_1"""
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
-        self.bg_image = 'images/bg - 2.jpg'
+        self.bg_image = 'images/bg - 1.jpg'
 
         self.simple_enemy_number = 5
         self.simple_enemy_wave = 2
@@ -106,13 +115,13 @@ class Settings:
     def chap_2(self):
         """广播：将进行chap_2"""
         self.bgm = "bgm/BLESSED MANE - Death Is No More.mp3"
-        self.bg_image = 'images/bg - 3.jpg'
+        self.bg_image = 'images/bg - 2.jpg'
 
         # 无限前
-        self.simple_enemy_number = 1
+        self.simple_enemy_number = 10
         self.simple_enemy_wave = 5
         self.simple_enemy_speed = 1.2
-        self.simple_enemy_prod_blank = 1
+        self.simple_enemy_prod_blank = 5
         # sp的图像
         self.sp_1 = 'images/sp - 5.jpg'
         self.sp_2 = 'images/sp - 6.jpg'
