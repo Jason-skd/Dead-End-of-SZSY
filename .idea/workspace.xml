@@ -4,13 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="7/5 15:00">
+    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="interface make up">
+      <change afterPath="$PROJECT_DIR$/images/bg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/surface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/heroes.py" beforeDir="false" afterPath="$PROJECT_DIR$/heroes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/carrot - 1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/carrot - 2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/bg - 1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/bg - 1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/bg - 2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/bg - 2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/bg - 3.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -396,7 +398,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751699054402</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="finish carrot">
+      <option name="closed" value="true" />
+      <created>1751728242683</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1751728242683</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -425,6 +435,8 @@
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml" />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
     <MESSAGE value="7/5 15:00" />
-    <option name="LAST_COMMIT_MESSAGE" value="7/5 15:00" />
+    <MESSAGE value="finish carrot" />
+    <MESSAGE value="interface make up" />
+    <option name="LAST_COMMIT_MESSAGE" value="interface make up" />
   </component>
 </project>
