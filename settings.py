@@ -71,8 +71,8 @@ class Settings:
         self.carrot_flying_duration = 3
         self.carrot_numb = 8
         self.carrot_speed = 2
-        self.carrot_dominate = 1.5
-        self.car_speed_up = 4
+        self.carrot_dominate_duration = 1.5
+        self.carrot_lifespan = 15
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5

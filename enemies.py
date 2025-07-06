@@ -132,6 +132,7 @@ class Gh(SimpleEnemy):
         self.carrot_prep_image = pygame.transform.scale(self.carrot_prep_image,
                                                       (self.settings.carrot_width, self.settings.carrot_width))
 
+
     def carrot(self, number, speed):
         """gh技能：拔出萝卜带出泥"""
 
@@ -148,6 +149,7 @@ class Gh(SimpleEnemy):
             dy = speed * cos
 
             current_carrot = self.Carrot(self.deos_game, self, dx, dy, self.carrot_nor_image, self.carrot_prep_image)
+            # noinspection PyTypeChecker
             self.carrots.add(current_carrot)
 
     class Carrot(pygame.sprite.Sprite):
@@ -178,6 +180,9 @@ class Gh(SimpleEnemy):
 
             # 飞行帧数
             self.flying_duration = self.settings.carrot_flying_duration * 60
+            # 控制帧数
+            self.dominate_duration = self.settings.carrot_dominate_duration * 60
+            self.lifespan = self.settings.carrot_lifespan * 60
 
             # 初始化计时
             self.tick = 0
@@ -187,33 +192,46 @@ class Gh(SimpleEnemy):
             self.hit = False
 
         def update(self):
+            self.tick += 1
             if self.tick < self.flying_duration:
-                self.tick += 1
-                self.x += self.dx  # 更新浮点数坐标
-                self.y += self.dy
-                self.rect.x = int(self.x)  # 取整赋值给 rect
-                self.rect.y = int(self.y)
-
+                self._flying()
             else:
+                # 扎根
                 if self.image != self.prep_image:
                     self.image = self.prep_image
             if self.hit:
-                self.dominate_duration_manage()
+                self._dominate_duration_manage(self.rect.center)
 
-        def dominate_duration_manage(self):
-            if self.carrot_hit_tik >= self.settings.carrot_dominate * 60:
+            self._check_lifespan()
+
+        def _flying(self):
+            self.x += self.dx  # 更新浮点数坐标
+            self.y += self.dy
+            self.rect.x = int(self.x)  # 取整赋值给 rect
+            self.rect.y = int(self.y)
+
+        def _dominate_duration_manage(self, carrot_pos):
+            if self.carrot_hit_tik >= self.dominate_duration:
                 self.deos_game.hero.move_can = True
                 # 重置计时
                 self.carrot_hit_tik = 0
                 # 恢复gh速度
-                self.user.speed /= self.settings.car_speed_up
                 self.user.carrots.remove(self)
-            else:
-                self.carrot_hit_tik += 1
+            if self.carrot_hit_tik >= self.dominate_duration / 2:
+                self.user.teleportation(carrot_pos)
+            self.carrot_hit_tik += 1
+
+        def _check_lifespan(self):
+            if self.tick >= self.lifespan:
+                self.user.carrots.remove(self)
 
         def draw_carrot(self):
             """在屏幕上绘制carrot"""
             self.screen.blit(self.image, self.rect)
+
+    def teleportation(self, pos):
+        self.x = pos[0]
+        self.y = pos[1]
 
     def draw_enemy(self):
         """在屏幕上绘制gh和技能"""

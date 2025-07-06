@@ -256,7 +256,6 @@ class DeadEndOfSZSY:
                 self._switch_status()
             if self.tik >= self.lifespan:
                 self.end_life = True
-                print("end")
 
         def _switch_status(self):
             if not self.switch:
@@ -335,6 +334,7 @@ class DeadEndOfSZSY:
 
             # 默认事件
             self.hero.center_hero()
+            # noinspection PyTypeChecker
             self.hero_group.add(self.hero)
 
         def host_game(self):
@@ -454,14 +454,17 @@ class DeadEndOfSZSY:
                 enemy_x = random.randint(0, self.screen_rect.right)
                 enemy_y = random.randint(0, self.screen_rect.bottom)
                 enemy = enemies.SimpleEnemy(self, enemy_x, enemy_y)
+                # noinspection PyTypeChecker
                 self.simple_enemies.add(enemy)
                 # 将该敌人加入攻击目标
+                # noinspection PyTypeChecker
                 self.enemies_for_target.add(enemy)
 
         def prod_head(self):
             """产生头目"""
             if self.head_name == 'gh':
                 self.gh = enemies.Gh(self, 960, 540)
+                # noinspection PyTypeChecker
                 self.enemies_for_target.add(self.gh)
 
                 # 血条与伤害
@@ -471,6 +474,7 @@ class DeadEndOfSZSY:
                 self.gh_hurt = 0
 
                 self.gh_group = pygame.sprite.Group()
+                # noinspection PyTypeChecker
                 self.gh_group.add(self.gh)
 
                 # 技能
@@ -579,6 +583,7 @@ class DeadEndOfSZSY:
             new_bullet.direction = (min_x, min_y)
 
             # 加入Group
+            # noinspection PyTypeChecker
             self.bullets.add(new_bullet)
 
         def _update_bullet(self):
@@ -619,7 +624,6 @@ class DeadEndOfSZSY:
                 if pygame.sprite.collide_rect(carrot, self.hero) and carrot.hit is False:
                     self.hero.move_can = False
                     carrot.hit = True
-                    self.gh.speed *= self.settings.car_speed_up
 
         def _check_hero_hurt(self):
             """响应hero受到攻击"""
