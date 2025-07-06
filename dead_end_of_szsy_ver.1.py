@@ -8,12 +8,11 @@ from blood_bar import BloodBar
 from button import Button
 from surface import CreateSurface
 
-
 class DeadEndOfSZSY:
     """DeadEndOfSZSY游戏的主进程"""
 
     def __init__(self):
-        """初始化游戏"""
+        """创建游戏地基"""
         pygame.init()
         # 停用中文输入
         pygame.key.stop_text_input()
@@ -28,24 +27,27 @@ class DeadEndOfSZSY:
         while not self.Welcome(self).run():
             break
 
-        while True:
-            with self.GameSession(self, 1) as game:
-                result = game.host_game()
-                if result == "Defeat":
-                    # 直到点击才重新开始本章
-                    while self.Defeat(self).run():
-                        break
-                    continue
-                elif result == "Victory":
-                    # 直到点击才开始下一章
-                    while self.NextChapt(self, "2").run():
-                        break
-                    break
+        # while True:
+        #     with self.GameSession(self, 1) as game:
+        #         result = game.host_game()
+        #         if result == "Defeat":
+        #             # 直到点击才重新开始本章
+        #             while self.Defeat(self).run():
+        #                 break
+        #             continue
+        #         elif result == "Victory":
+        #             # 直到点击才开始下一章
+        #             while self.NextChapt(self, "2").run():
+        #                 break
+        #             break
 
         while True:
             with self.GameSession(self, 2) as game:
                 result = game.host_game()
                 if result == "Defeat":
+                    # 跳脸
+                    jf = self.GhJumpFace(self)
+                    jf.run()
                     # 直到点击才重新开始本章
                     while self.Defeat(self).run():
                         break
@@ -60,8 +62,9 @@ class DeadEndOfSZSY:
     class GameSession:
         """使用上下文管理器管理游戏资源"""
 
-        def __init__(self, deos_game, chap):
-            self.deos_game = deos_game
+        def __init__(self, main_game, chap):
+            """传入游戏地基"""
+            self.deos_game = main_game
             self.chap = chap
             # 游戏实例初始化
             self.game_instance = None
@@ -151,7 +154,7 @@ class DeadEndOfSZSY:
                 self._update_screen()
             return True
         def _create_logo(self):
-            self.logo.image_surface(self.settings.logo, (self.settings.logo_width, self.settings.logo_height))
+            self.logo.image_fill_surface(self.settings.logo, (self.settings.logo_width, self.settings.logo_height))
 
         def _update_screen(self):
             self.screen.blit(self.bg, self.screen_rect)
@@ -200,7 +203,7 @@ class DeadEndOfSZSY:
                                       self.settings.play_size, "Enter!")
 
         def _create_next_chap_msg(self):
-            self.chapter_msg.text_surface(70, f"Next: chapter. {self.next_chap}")
+            self.chapter_msg.text_fill_surface(70, f"Next: chapter. {self.next_chap}")
             self.chapter_msg.rect.top = self.screen_rect.top + self.settings.nx_chap_top_dist
             self.chapter_msg.rect.centerx = self.screen_rect.centerx
 
@@ -221,6 +224,60 @@ class DeadEndOfSZSY:
             # 让最近绘制的屏幕可见
             pygame.display.flip()
 
+    class GhJumpFace:
+        """gh跳脸界面"""
+        def __init__(self, game):
+            self.screen = game.screen
+            self.screen_rect = game.screen_rect
+            self.settings = game.settings
+
+            self.clock = pygame.time.Clock()
+
+            self.small_surface = CreateSurface(game, self.screen_rect.centerx, self.screen_rect.centery)
+            self.small_surface.image_fill_surface(self.settings.gh_face, (self.settings.jf_small_width,
+                                                                          self.settings.jf_small_width))
+            self.large_surface = CreateSurface(game, self.screen_rect.centerx, self.screen_rect.centery)
+            self.large_surface.image_fill_surface(self.settings.gh_face, (self.settings.jf_large_width,
+                                                                          self.settings.jf_large_width))
+
+            self.jp_sound = pygame.mixer.Sound(self.settings.jump_face_sound)
+            self.switch = False
+
+            self.interval = self.settings.jp_interval * 60
+            self.lifespan = self.settings.jf_lifespan * 60
+            self.tik = 0
+
+            # 结束跳脸界面标志
+            self.end_life = False
+
+        def _check_tik(self):
+            self.tik += 1
+            if self.tik >= self.interval:
+                self._switch_status()
+            if self.tik >= self.lifespan:
+                self.end_life = True
+                print("end")
+
+        def _switch_status(self):
+            if not self.switch:
+                self.jp_sound.play()
+                self.switch = True
+
+        def run(self):
+            while not self.end_life:
+                self.clock.tick(60)
+                self._check_tik()
+                self._update_screen()
+
+        def _update_screen(self):
+            self.screen.fill((0, 0, 0))
+            if not self.switch:
+                self.small_surface.blitme()
+            else:
+                self.large_surface.blitme()
+
+            pygame.display.flip()
+
 
     class MainGame:
         """游戏主逻辑"""
@@ -237,44 +294,48 @@ class DeadEndOfSZSY:
             elif chap == 2:
                 self.settings.chap_2()
 
-
             self.head_name = self.settings.chap_head
-
 
             # 加载资源
             pygame.mixer.music.load(self.settings.bgm)
             pygame.mixer.music.set_volume(self.settings.bgm_volume)
             pygame.mixer.music.play(-1)
+
             self.hit_sound = pygame.mixer.Sound('bgm/hurt.wav')
+
             self.died_sound = pygame.mixer.Sound('bgm/die.wav')
+
             self.fire_sound = pygame.mixer.Sound('bgm/fire.mp3')
             self.fire_sound.set_volume(0.3)
+
             self.bg = pygame.image.load(self.settings.bg_image)
 
-            # 初始化游戏对象
-            self.hero = heroes.Sgzy(self)
-            self.simple_enemies = pygame.sprite.Group()
-            self.bullets = pygame.sprite.Group()
-            self.enemies_for_target = pygame.sprite.Group()
-            self.clock = pygame.time.Clock()
-            self.hero_group = pygame.sprite.Group()
-            self.hero_group.add(self.hero)
-
-            # 初始化游戏状态
+            # 初始化游戏变量
             self.bullet_counter = self.settings.bullet_fire_blanking
+            self.hero_hurt = 0
             self.hurt_counter = 0
             self.hurt_count_start = False
             self.hero_blood_max = self.settings.sgzy_blood
             self.hero_blood = self.hero_blood_max
-            # hero本帧要扣的血
-            self.hero_hurt = 0
-            self.hero_blood_bar = BloodBar(self, self.hero, self.hero_blood_max, self.settings.blood_bar_width)
-            self.hero.center_hero()
+            self.prod_waves_complete = False
+            self.prod_sp_enemy_waves = None
+            self.head_exist = False
             self.prod_waves_complete = False
 
-            self.head_exist = False
-            # 跳脸
-            self.jump_face = False
+            # 初始化游戏对象
+            self.clock = pygame.time.Clock()
+            self.hero = heroes.Sgzy(self)
+            self.hero_blood_bar = BloodBar(self, self.hero, self.hero_blood_max, self.settings.blood_bar_width)
+            self.simple_enemies = pygame.sprite.Group()
+            self.enemies_for_target = pygame.sprite.Group()
+            self.bullets = pygame.sprite.Group()
+            self.hero_group = pygame.sprite.Group()
+            self.timers = []
+
+
+            # 默认事件
+            self.hero.center_hero()
+            self.hero_group.add(self.hero)
 
         def host_game(self):
             """游戏主循环，返回 'Victory' 或 'Defeat'"""
@@ -283,60 +344,52 @@ class DeadEndOfSZSY:
                 self.settings.simple_enemy_prod_blank,
                 self.settings.simple_enemy_number)
 
-            running = True
-
-            jump_face_tik = 0
-            while running:
+            while True:
                 self.clock.tick(60)
                 self._check_events()
 
-                # 游戏逻辑更新
-                # false 就一直check
-                self.prod_waves_complete = self.prod_sp_enemy_waves.check_prod()
-                if self.prod_waves_complete:
-                    if self.settings.sp_inf:
-                        self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(
-                            self, self.settings.inf_simple_enemy_wave,
-                            self.settings.inf_simple_enemy_prod_blank,
-                            self.settings.inf_simple_enemy_number)
-
-                self.hero.update()
-                self._update_simple_enemies()
-                self._bullet_launcher()
-                self._update_bullet()
-                self.hero_blood_bar.update()
-                self._check_hero_hurt()
-                if self.head_exist:
-                    self.gh.update(self.hero)
-                    self._check_bullet_head_collisions()
-                    self.gh_blood_bar.update()
-                    self.head_hurt_manage()
-                    self.gh_skill_manage.check_prod()
-                    self._check_carrots_hero_collisions()
-
+                self._tik()
+                self._update_object_status()
 
                 # 检查游戏状态
                 game_status = self.hurt_manage()
                 if game_status == "Defeat":
                     self.died_sound.play()
-                    if self.head_exist:
-                        # 跳脸
-                        while jump_face_tik <= 2:
-                            self.clock.tick(1)
-                            jump_face_tik += 1
-                            if jump_face_tik >= 1:
-                                self.gh_jump_face()
-                                pygame.display.flip()
-                            if jump_face_tik == 1:
-                                jump_face_sound = pygame.mixer.Sound(self.settings.jump_face_sound)
-                                jump_face_sound.play()
-
                     return "Defeat"
                 elif self._check_victory():  # 新增：检查是否胜利
                     return "Victory"
 
                 self._update_screen()
+
+
+        def _tik(self):
+            self.prod_waves_complete = self.prod_sp_enemy_waves.check_prod()
+            if self.prod_waves_complete:
+                if self.settings.sp_inf:
+                    self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(
+                        self, self.settings.inf_simple_enemy_wave,
+                        self.settings.inf_simple_enemy_prod_blank,
+                        self.settings.inf_simple_enemy_number)
+
+            if self.head_exist:
+                self._check_bullet_head_collisions()
+                self.gh_skill_manage.check_prod()
+                self._check_carrots_hero_collisions()
+
+
             return "Quit"  # 如果主动退出
+
+        def _update_object_status(self):
+            self.hero.update()
+            self._update_simple_enemies()
+            self._bullet_launcher()
+            self._update_bullet()
+            self.hero_blood_bar.update()
+            self._check_hero_hurt()
+            if self.head_exist:
+                self.gh.update(self.hero)
+                self.gh_blood_bar.update()
+                self.head_hurt_manage()
 
         def _check_victory(self):
             """检查是否胜利（击败所有敌人）"""
@@ -586,13 +639,6 @@ class DeadEndOfSZSY:
                 self.hero.speed = self.settings.heroes_speed
                 self.hurt_count_start = False
 
-        def gh_jump_face(self):
-            image = pygame.image.load(self.settings.gh_face)
-            image = pygame.transform.scale(image, (1074, 1215))
-            rect = image.get_rect()
-
-            rect.center = self.screen_rect.center
-            self.screen.blit(image, rect)
 
         def _update_screen(self):
             """绘制屏幕"""

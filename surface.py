@@ -10,7 +10,7 @@ class CreateSurface:
         self.surface = None
         self.rect = None
 
-    def text_surface(self, font_size, msg, color='white'):
+    def text_fill_surface(self, font_size, msg, color='white'):
         """创建文字surface"""
         # 渲染
         font = pygame.font.Font(None, font_size)
@@ -22,13 +22,12 @@ class CreateSurface:
         # 设置位置
         self.rect.center = (self.centerx, self.centery)
 
-    def image_surface(self, path, scale=None):
+    def image_fill_surface(self, path, scale=None):
         """创建图案surface"""
         try:
             self.surface = pygame.image.load(path)
         except pygame.error as e:
-            self.text_surface(36, "ERROR", "red")
-            return
+            self.text_fill_surface(36, "ERROR", "red")
 
         if scale:
             self.surface = pygame.transform.scale(self.surface, scale)

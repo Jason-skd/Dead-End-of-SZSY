@@ -61,7 +61,7 @@ class Settings:
         self.gh_width = 132.3
         self.gh_height = 151.8
         self.gh_skill_blank = 5
-        self.gh_face = 'images/gh_face.jpg'
+        self.gh_face = 'images/gh_face.png'
         self.jump_face_sound = 'bgm/jump_face.wav'
 
         # 技能
@@ -89,6 +89,13 @@ class Settings:
 
         self.gh_blood_bar_width = 130
         self.gh_blood_bar_color = (200, 0, 50)
+
+        # 跳脸
+        self.jump_face = 'images/gh_face.jpg'
+        self.jf_small_width = 20
+        self.jp_interval =1.5
+        self.jf_large_width = 1920
+        self.jf_lifespan = 2.5
 
         # 关卡设置
 
