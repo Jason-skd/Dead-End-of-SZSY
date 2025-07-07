@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="jump_face">
+    <list default="true" id="b5155108-3b30-4327-85bb-1d8c9b3e26ba" name="更改" comment="7/7 8:00">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" beforeDir="false" afterPath="$PROJECT_DIR$/dead_end_of_szsy_ver.1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/enemies.py" afterDir="false" />
@@ -109,7 +109,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-53e2683a6804-9cdd278e9d02-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.26094.141" />
+        <option value="bundled-python-sdk-598b0484d0b5-e2d783800521-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.26927.74" />
       </set>
     </attachedChunks>
   </component>
@@ -425,7 +425,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751844322923</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="7/7 8:00">
+      <option name="closed" value="true" />
+      <created>1751846276346</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1751846276346</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -457,6 +465,7 @@
     <MESSAGE value="finish carrot" />
     <MESSAGE value="interface make up" />
     <MESSAGE value="jump_face" />
-    <option name="LAST_COMMIT_MESSAGE" value="jump_face" />
+    <MESSAGE value="7/7 8:00" />
+    <option name="LAST_COMMIT_MESSAGE" value="7/7 8:00" />
   </component>
 </project>

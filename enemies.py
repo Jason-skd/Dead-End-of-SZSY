@@ -2,6 +2,8 @@ import math, random
 
 import pygame
 
+import surface
+
 class SimpleEnemy(pygame.sprite.Sprite):
     """管理SimpleEnemy的类"""
 
@@ -36,8 +38,11 @@ class SimpleEnemy(pygame.sprite.Sprite):
         self.y = float(self.rect.y)
 
         # 移动标志，不处于攻击状态：移动
-        self.moving = True
+        self.attack_moving = True
         self.hero = deos_game.hero
+
+        # 除了普攻以外的移动控制
+        self.other_moving = True
 
         # 伤害
         self.hurt_value = self.settings.simple_enemy_harm
@@ -59,21 +64,21 @@ class SimpleEnemy(pygame.sprite.Sprite):
     def _update_moving(self, target):
         """向hero移动"""
         # 计算方向向量
-        dx = target.rect.centerx - self.rect.centerx
-        dy = target.rect.centery - self.rect.centery
-        distance = math.sqrt(dx * dx + dy * dy)
+        if self.attack_moving and self.other_moving:
+            dx = target.rect.centerx - self.rect.centerx
+            dy = target.rect.centery - self.rect.centery
+            distance = math.sqrt(dx * dx + dy * dy)
 
-        # 标准化方向向量并乘以速度
-        if distance > 0:  # 避免除以零
-            dx = dx / distance * self.speed
-            dy = dy / distance * self.speed
+            # 标准化方向向量并乘以速度
+            if distance > 0:  # 避免除以零
+                dx = dx / distance * self.speed
+                dy = dy / distance * self.speed
 
-        # 如果不在攻击：更新位置
-        if self.moving:
             self.x += dx  # 更新浮点数坐标
             self.y += dy
-            self.rect.x = int(self.x)  # 取整赋值给 rect
-            self.rect.y = int(self.y)
+
+        self.rect.x = int(self.x)  # 取整赋值给 rect
+        self.rect.y = int(self.y)
 
     def _manage_hurt(self):
         """通过帧管理攻击冷却读秒"""
@@ -83,10 +88,10 @@ class SimpleEnemy(pygame.sprite.Sprite):
 
         if pygame.sprite.collide_rect(self, self.hero):
             # 如果simple_enemy正在攻击，停止运动，尝试造成伤害
-            self.moving = False
+            self.attack_moving = False
             self._try_hurt()
         else:
-            self.moving = True
+            self.attack_moving = True
 
     def _try_hurt(self):
         """当测试为冷却读秒达到设定的冷却，造成伤害"""
@@ -131,6 +136,16 @@ class Gh(SimpleEnemy):
         self.carrot_prep_image = pygame.image.load(self.settings.carrot_prep)
         self.carrot_prep_image = pygame.transform.scale(self.carrot_prep_image,
                                                       (self.settings.carrot_width, self.settings.carrot_width))
+
+        # 加载技能语音
+        self.zaijia = pygame.mixer.Sound(self.settings.zaijia)
+        self.chuchu = pygame.mixer.Sound(self.settings.chuchu)
+        self.ganshen = pygame.mixer.Sound(self.settings.ganshen)
+        self.bachu = pygame.mixer.Sound(self.settings.bachu)
+        self.kange = pygame.mixer.Sound(self.settings.kange)
+        self.zhonggu = pygame.mixer.Sound(self.settings.zhonggu)
+
+        self.ganshen.play()
 
 
     def carrot(self, number, speed):
@@ -191,7 +206,10 @@ class Gh(SimpleEnemy):
             self.carrot_hit_tik = 0
             self.hit = False
 
+            self.user.bachu.play()
+
         def update(self):
+            """绘制屏幕"""
             self.tick += 1
             if self.tick < self.flying_duration:
                 self._flying()
@@ -205,12 +223,14 @@ class Gh(SimpleEnemy):
             self._check_lifespan()
 
         def _flying(self):
+            """萝卜飞行"""
             self.x += self.dx  # 更新浮点数坐标
             self.y += self.dy
             self.rect.x = int(self.x)  # 取整赋值给 rect
             self.rect.y = int(self.y)
 
         def _dominate_duration_manage(self, carrot_pos):
+            """控制时长控制"""
             if self.carrot_hit_tik >= self.dominate_duration:
                 self.deos_game.hero.move_can = True
                 # 重置计时
@@ -222,6 +242,7 @@ class Gh(SimpleEnemy):
             self.carrot_hit_tik += 1
 
         def _check_lifespan(self):
+            """寿命控制"""
             if self.tick >= self.lifespan:
                 self.user.carrots.remove(self)
 
@@ -230,8 +251,56 @@ class Gh(SimpleEnemy):
             self.screen.blit(self.image, self.rect)
 
     def teleportation(self, pos):
+        """传送"""
+        self.zaijia.play()
         self.x = pos[0]
         self.y = pos[1]
+
+    class HiteVision:
+        """技能：看个通知"""
+        def __init__(self, deos_game, user):
+            self.deos_game = deos_game
+            self.screen = deos_game.screen
+            self.screen_rect = deos_game.screen_rect
+            self.settings = deos_game.settings
+            self.user = user
+
+            self.centerx = self.settings.board_centerx
+            self.centery = self.settings.board_centery
+
+            self.surface = surface.CreateSurface(deos_game, self.centerx, self.centery)
+            self.surface.image_fill_surface(self.settings.hv_image,
+                                            (self.settings.board_width,self.settings.board_height))
+
+            self.lifespan = self.settings.hv_lifespan * 60
+            self.hurt_blank = self.settings.hv_hurt_blank * 60
+            self.counter = 0
+
+            self.hurt = self.settings.hv_hurt
+
+            self.user.kange.play()
+
+        def check_life(self):
+            """生命周期内blit，并实现其他效果"""
+            self.counter += 1
+            if self.counter <= self.lifespan:
+                self.user.other_moving = False
+                self._hurt()
+            else:
+                self.deos_game.hitevision_exist = False
+                self.user.other_moving = True
+
+        def _hurt(self):
+            """产生伤害"""
+            for count in range(0, self.lifespan):
+                if self.counter == count * self.hurt_blank:
+                    if not pygame.sprite.collide_rect(self.deos_game.hero, self.surface):
+                        self.deos_game.hero_hurt += self.hurt
+
+
+        def blitme(self):
+            """绘制屏幕"""
+            self.surface.blitme()
 
     def draw_enemy(self):
         """在屏幕上绘制gh和技能"""
@@ -242,6 +311,7 @@ class Gh(SimpleEnemy):
             carrot.draw_carrot()
 
     def update(self, target):
+        """绘制gh"""
         super().update(target)
 
         # 技能刷新

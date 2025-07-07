@@ -27,19 +27,19 @@ class DeadEndOfSZSY:
         while not self.Welcome(self).run():
             break
 
-        # while True:
-        #     with self.GameSession(self, 1) as game:
-        #         result = game.host_game()
-        #         if result == "Defeat":
-        #             # 直到点击才重新开始本章
-        #             while self.Defeat(self).run():
-        #                 break
-        #             continue
-        #         elif result == "Victory":
-        #             # 直到点击才开始下一章
-        #             while self.NextChapt(self, "2").run():
-        #                 break
-        #             break
+        while True:
+            with self.GameSession(self, 1) as game:
+                result = game.host_game()
+                if result == "Defeat":
+                    # 直到点击才重新开始本章
+                    while self.Defeat(self).run():
+                        break
+                    continue
+                elif result == "Victory":
+                    # 直到点击才开始下一章
+                    while self.NextChapt(self, "2").run():
+                        break
+                    break
 
         while True:
             with self.GameSession(self, 2) as game:
@@ -81,7 +81,6 @@ class DeadEndOfSZSY:
                 self.game_instance.bullets.empty()
                 self.game_instance.simple_enemies.empty()
                 self.game_instance.enemies_for_target.empty()
-                self.game_instance.hero_group.empty()
                 # 重置游戏状态（避免章节间污染）
                 self.deos_game.hero_blood = self.deos_game.settings.sgzy_blood
                 # self.deos_game.hero_hurt = 0
@@ -147,6 +146,7 @@ class DeadEndOfSZSY:
                                       self.screen_rect.centery + self.settings.logo_center_height)
 
         def run(self):
+            """运行主循环"""
             while not self.play_clicked:
                 self._create_play_button()
                 self._create_logo()
@@ -154,9 +154,11 @@ class DeadEndOfSZSY:
                 self._update_screen()
             return True
         def _create_logo(self):
+            """加载logo"""
             self.logo.image_fill_surface(self.settings.logo, (self.settings.logo_width, self.settings.logo_height))
 
         def _update_screen(self):
+            """绘制屏幕"""
             self.screen.blit(self.bg, self.screen_rect)
             self.play_button.draw_button()
             self.logo.blitme()
@@ -203,6 +205,7 @@ class DeadEndOfSZSY:
                                       self.settings.play_size, "Enter!")
 
         def _create_next_chap_msg(self):
+            """绘制下一章通知"""
             self.chapter_msg.text_fill_surface(70, f"Next: chapter. {self.next_chap}")
             self.chapter_msg.rect.top = self.screen_rect.top + self.settings.nx_chap_top_dist
             self.chapter_msg.rect.centerx = self.screen_rect.centerx
@@ -217,6 +220,7 @@ class DeadEndOfSZSY:
             return True
 
         def _update_screen(self):
+            """绘制屏幕"""
             self.screen.blit(self.bg, self.screen_rect)
             self.play_button.draw_button()
             self.chapter_msg.blitme()
@@ -251,6 +255,7 @@ class DeadEndOfSZSY:
             self.end_life = False
 
         def _check_tik(self):
+            """计时"""
             self.tik += 1
             if self.tik >= self.interval:
                 self._switch_status()
@@ -258,17 +263,20 @@ class DeadEndOfSZSY:
                 self.end_life = True
 
         def _switch_status(self):
+            """突脸"""
             if not self.switch:
                 self.jp_sound.play()
                 self.switch = True
 
         def run(self):
+            """运行主循环"""
             while not self.end_life:
                 self.clock.tick(60)
                 self._check_tik()
                 self._update_screen()
 
         def _update_screen(self):
+            """绘制屏幕"""
             self.screen.fill((0, 0, 0))
             if not self.switch:
                 self.small_surface.blitme()
@@ -328,14 +336,11 @@ class DeadEndOfSZSY:
             self.simple_enemies = pygame.sprite.Group()
             self.enemies_for_target = pygame.sprite.Group()
             self.bullets = pygame.sprite.Group()
-            self.hero_group = pygame.sprite.Group()
             self.timers = []
 
 
             # 默认事件
             self.hero.center_hero()
-            # noinspection PyTypeChecker
-            self.hero_group.add(self.hero)
 
         def host_game(self):
             """游戏主循环，返回 'Victory' 或 'Defeat'"""
@@ -363,6 +368,7 @@ class DeadEndOfSZSY:
 
 
         def _tik(self):
+            """计时"""
             self.prod_waves_complete = self.prod_sp_enemy_waves.check_prod()
             if self.prod_waves_complete:
                 if self.settings.sp_inf:
@@ -375,11 +381,14 @@ class DeadEndOfSZSY:
                 self._check_bullet_head_collisions()
                 self.gh_skill_manage.check_prod()
                 self._check_carrots_hero_collisions()
+                if self.hitevision_exist:
+                    self.hitevision.check_life()
 
 
             return "Quit"  # 如果主动退出
 
         def _update_object_status(self):
+            """更新对象状态"""
             self.hero.update()
             self._update_simple_enemies()
             self._bullet_launcher()
@@ -479,6 +488,9 @@ class DeadEndOfSZSY:
 
                 # 技能
                 self.gh_skill_manage = self.HeadSkillManage(self, self.settings.gh_skill_blank)
+                # 初始化技能HiteVision
+                self.hitevision = None
+                self.hitevision_exist = False
 
             self.head_exist = True
 
@@ -493,7 +505,7 @@ class DeadEndOfSZSY:
                 self.number = number
                 self.blank = blank * 60
 
-                self.current_blank = self.blank
+                self.current_blank = 0
                 self.current_waves = 0
 
             def check_prod(self):
@@ -526,6 +538,8 @@ class DeadEndOfSZSY:
                 self.last_skill = 0
                 self.current_skill = 0
 
+                self.head = deos_game.gh
+
             def check_prod(self):
                 """计时器"""
                 if self.current_blank >= self.blank:
@@ -537,15 +551,18 @@ class DeadEndOfSZSY:
             def prod_skill(self):
                 """随机产生技能"""
                 while self.current_skill == self.last_skill:
-                    # self.current_skill = random.randint(1, 2)  # 有几种技能
-                    self.current_skill = 1
+                    self.current_skill = random.randint(1, 2)  # 有几种技能
 
                 if self.current_skill == 1:
                     # 从1到最大胡萝卜数量发射
-                    self.deos_game.gh.carrot(random.randint(1, self.settings.carrot_numb)
+                    self.head.carrot(random.randint(1, self.settings.carrot_numb)
                                              , self.settings.carrot_speed)
                 elif self.current_skill == 2:
-                    pass
+                    self.deos_game.hitevision = self.head.HiteVision(self.deos_game, self.head)
+                    self.deos_game.hitevision_exist = True
+
+                self.last_skill = self.current_skill
+
 
 
         def _update_simple_enemies(self):
@@ -653,6 +670,8 @@ class DeadEndOfSZSY:
                 bullet.draw_bullet()
 
             if self.head_exist:
+                if self.hitevision_exist:
+                    self.hitevision.blitme()
                 self.gh.draw_enemy()
                 self.gh_blood_bar.draw_blood_blank()
                 self.gh_blood_bar.draw_blood_bar(self.gh_blood)

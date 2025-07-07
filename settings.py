@@ -54,17 +54,18 @@ class Settings:
         self.simple_enemy_hurt_blank = 0.5
 
         self.gh_speed = 0.5
-        self.gh_harm = 20
+        self.gh_harm = 25
         self.gh_blood = 120
-        self.gh_hurt_blank = 1
+        self.gh_hurt_blank = 1.5
         self.gh_image = 'images/gh.jpg'
         self.gh_width = 132.3
         self.gh_height = 151.8
-        self.gh_skill_blank = 5
+        self.gh_skill_blank = 10
         self.gh_face = 'images/gh_face.png'
         self.jump_face_sound = 'bgm/jump_face.wav'
 
         # 技能
+
         self.carrot_width = 40
         self.carrot_nor = 'images/carrot - 1.png'
         self.carrot_prep = 'images/carrot - 2.png'
@@ -72,7 +73,23 @@ class Settings:
         self.carrot_numb = 8
         self.carrot_speed = 2
         self.carrot_dominate_duration = 1.5
-        self.carrot_lifespan = 15
+        self.carrot_lifespan = 30
+
+        self.board_width = 589
+        self.board_height = 227
+        self.board_centerx = 959.5
+        self.board_centery = 309.5
+        self.hv_image = 'images/Hite Vision.png'
+        self.hv_lifespan = 5
+        self.hv_hurt_blank = 1
+        self.hv_hurt = 10
+
+        self.zaijia = 'bgm/再加三周.wav'
+        self.chuchu = 'bgm/处处有提醒.wav'
+        self.ganshen = 'bgm/干什么呢 都高三了.wav'
+        self.bachu = 'bgm/拔出萝卜.wav'
+        self.kange = 'bgm/看个通知.wav'
+        self.zhonggu = 'bgm/重骨架.wav'
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5
@@ -104,10 +121,10 @@ class Settings:
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 1.jpg'
 
-        self.simple_enemy_number = 5
-        self.simple_enemy_wave = 2
+        self.simple_enemy_number = 20
+        self.simple_enemy_wave = 7
         self.simple_enemy_speed = 1.5
-        self.simple_enemy_prod_blank = 10
+        self.simple_enemy_prod_blank = 5
         # sp的图像
         self.sp_1 = 'images/sp - 1.jpg'
         self.sp_2 = 'images/sp - 2.jpg'
@@ -125,7 +142,7 @@ class Settings:
         self.bg_image = 'images/bg - 2.jpg'
 
         # 无限前
-        self.simple_enemy_number = 10
+        self.simple_enemy_number = 20
         self.simple_enemy_wave = 5
         self.simple_enemy_speed = 1.2
         self.simple_enemy_prod_blank = 5
