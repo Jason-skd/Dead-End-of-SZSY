@@ -65,7 +65,6 @@ class Settings:
         self.jump_face_sound = 'bgm/jump_face.wav'
 
         # 技能
-
         self.carrot_width = 40
         self.carrot_nor = 'images/carrot - 1.png'
         self.carrot_prep = 'images/carrot - 2.png'
@@ -73,7 +72,7 @@ class Settings:
         self.carrot_numb = 8
         self.carrot_speed = 2
         self.carrot_dominate_duration = 1.5
-        self.carrot_lifespan = 30
+        self.carrot_lifespan = 60
 
         self.board_width = 589
         self.board_height = 227
@@ -81,8 +80,8 @@ class Settings:
         self.board_centery = 309.5
         self.hv_image = 'images/Hite Vision.png'
         self.hv_lifespan = 5
-        self.hv_hurt_blank = 1
-        self.hv_hurt = 10
+        self.hv_hurt_blank = 0.5
+        self.hv_hurt = 5
 
         self.zaijia = 'bgm/再加三周.wav'
         self.chuchu = 'bgm/处处有提醒.wav'
@@ -90,12 +89,18 @@ class Settings:
         self.bachu = 'bgm/拔出萝卜.wav'
         self.kange = 'bgm/看个通知.wav'
         self.zhonggu = 'bgm/重骨架.wav'
+        self.hit = 'bgm/打击.wav'
+
+        self.flash = 'bgm/闪现.wav'
+        self.skill_f_duration = 3
+        self.frame_speed_up = 3
+        self.benzene = 'images/benzene.png'
 
         # bullet 设置
         self.bullet_fire_blanking = 0.5
         self.bullet_speed = 5.0
         self.bullet_radius = 8
-        self.bullet_color = (255, 255, 255)
+        self.bullet_color = (180, 180, 180)
 
         # blood_bar设置
         self.blood_bar_width = 55
@@ -119,7 +124,7 @@ class Settings:
     def chap_1(self):
         """广播：将进行chap_1"""
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
-        self.bg_image = 'images/bg - 1.jpg'
+        self.bg_image = 'images/bg - 1.png'
 
         self.simple_enemy_number = 20
         self.simple_enemy_wave = 7
@@ -155,8 +160,8 @@ class Settings:
         # 源源不断的小兵
         self.sp_inf = True
         # 无限后
-        self.inf_simple_enemy_number = 5
-        self.inf_simple_enemy_wave = 3
+        self.inf_simple_enemy_number = 15
+        self.inf_simple_enemy_wave = 1
         self.inf_simple_enemy_prod_blank = 10
 
         self.chap_head = 'gh'

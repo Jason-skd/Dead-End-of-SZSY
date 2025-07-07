@@ -144,9 +144,15 @@ class Gh(SimpleEnemy):
         self.bachu = pygame.mixer.Sound(self.settings.bachu)
         self.kange = pygame.mixer.Sound(self.settings.kange)
         self.zhonggu = pygame.mixer.Sound(self.settings.zhonggu)
+        self.flash = pygame.mixer.Sound(self.settings.flash)
+        self.hit_sound = pygame.mixer.Sound(self.settings.hit)
 
         self.ganshen.play()
 
+        # 重骨架技能初始化
+        self.skill_framework = False
+        self.benzene = pygame.image.load(self.settings.benzene)
+        self.benzene = pygame.transform.scale(self.benzene, (self.width, self.height))
 
     def carrot(self, number, speed):
         """gh技能：拔出萝卜带出泥"""
@@ -253,8 +259,9 @@ class Gh(SimpleEnemy):
     def teleportation(self, pos):
         """传送"""
         self.zaijia.play()
-        self.x = pos[0]
-        self.y = pos[1]
+        self.rect.center = pos
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
 
     class HiteVision:
         """技能：看个通知"""
@@ -294,7 +301,13 @@ class Gh(SimpleEnemy):
             """产生伤害"""
             for count in range(0, self.lifespan):
                 if self.counter == count * self.hurt_blank:
+                    self.user.hit_sound.play()
+                    # 清空小兵
+                    for sp in self.deos_game.simple_enemies:
+                        sp.kill()
+                    self.deos_game.simple_enemies.empty()
                     if not pygame.sprite.collide_rect(self.deos_game.hero, self.surface):
+                        # 伤害检查
                         self.deos_game.hero_hurt += self.hurt
 
 
@@ -302,9 +315,48 @@ class Gh(SimpleEnemy):
             """绘制屏幕"""
             self.surface.blitme()
 
+    class SkillFramework:
+        """发动技能 重骨架"""
+        def __init__(self, deos_game, user):
+            """初始化"""
+            self.deos_game = deos_game
+            self.settings = deos_game.settings
+            self.user = user
+
+            self.duration = self.settings.skill_f_duration * 60
+            self.counter = 0
+
+            # 技能效果
+            # 广播给gh
+            self.user.skill_framework = True
+
+            # 加速
+            self.speed_up = self.settings.frame_speed_up
+            self.user.speed = self.settings.gh_speed * self.speed_up
+
+            # 语音
+            self.user.zhonggu.play()
+
+            # 无法受到攻击
+            deos_game.enemies_for_target.remove(user)
+
+        def check_life(self):
+            self.counter += 1
+            if not self.counter <= self.duration:
+                # 还原速度
+                self.user.speed = self.settings.gh_speed
+                # 可以受到攻击
+                self.deos_game.enemies_for_target.add(self.user)
+                # 广播
+                self.user.skill_framework = False
+
     def draw_enemy(self):
         """在屏幕上绘制gh和技能"""
-        self.screen.blit(self.image, self.rect)
+        if not self.skill_framework:
+            # 如果没处于技能：重骨架状态中
+            self.screen.blit(self.image, self.rect)
+        else:
+            self.screen.blit(self.benzene, self.rect)
 
         # 绘制技能
         for carrot in self.carrots:

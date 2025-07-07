@@ -383,6 +383,8 @@ class DeadEndOfSZSY:
                 self._check_carrots_hero_collisions()
                 if self.hitevision_exist:
                     self.hitevision.check_life()
+                if self.gh.skill_framework:
+                    self.skill_frame.check_life()
 
 
             return "Quit"  # 如果主动退出
@@ -486,11 +488,13 @@ class DeadEndOfSZSY:
                 # noinspection PyTypeChecker
                 self.gh_group.add(self.gh)
 
-                # 技能
+                # 技能计时
                 self.gh_skill_manage = self.HeadSkillManage(self, self.settings.gh_skill_blank)
                 # 初始化技能HiteVision
                 self.hitevision = None
                 self.hitevision_exist = False
+                # 初始化技能重骨架
+                self.skill_frame = None
 
             self.head_exist = True
 
@@ -505,7 +509,7 @@ class DeadEndOfSZSY:
                 self.number = number
                 self.blank = blank * 60
 
-                self.current_blank = 0
+                self.current_blank = self.blank / 2
                 self.current_waves = 0
 
             def check_prod(self):
@@ -551,7 +555,7 @@ class DeadEndOfSZSY:
             def prod_skill(self):
                 """随机产生技能"""
                 while self.current_skill == self.last_skill:
-                    self.current_skill = random.randint(1, 2)  # 有几种技能
+                    self.current_skill = random.randint(1, 3)  # 有几种技能
 
                 if self.current_skill == 1:
                     # 从1到最大胡萝卜数量发射
@@ -560,6 +564,9 @@ class DeadEndOfSZSY:
                 elif self.current_skill == 2:
                     self.deos_game.hitevision = self.head.HiteVision(self.deos_game, self.head)
                     self.deos_game.hitevision_exist = True
+
+                elif self.current_skill == 3:
+                    self.deos_game.skill_frame = self.deos_game.gh.SkillFramework(self.deos_game, self.head)
 
                 self.last_skill = self.current_skill
 
@@ -666,16 +673,20 @@ class DeadEndOfSZSY:
             # 用纯色填充背景
             self.screen.blit(self.bg, self.screen_rect)
 
-            for bullet in self.bullets:
-                bullet.draw_bullet()
-
+            # 鸿合在bullet之下
             if self.head_exist:
                 if self.hitevision_exist:
                     self.hitevision.blitme()
+
+            # bullet在hero之下
+            for bullet in self.bullets:
+                bullet.draw_bullet()
+
+            # head在hero之下
+            if self.head_exist:
                 self.gh.draw_enemy()
                 self.gh_blood_bar.draw_blood_blank()
                 self.gh_blood_bar.draw_blood_bar(self.gh_blood)
-
 
             self.hero.blitme()
 
