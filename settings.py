@@ -79,7 +79,7 @@ class Settings:
         self.carrot_numb = 8
         self.carrot_speed = 2
         self.carrot_dominate_duration = 1.5
-        self.carrot_lifespan = 180
+        self.carrot_lifespan = 60
 
         self.board_width = 589
         self.board_height = 227

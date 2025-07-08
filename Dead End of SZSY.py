@@ -28,6 +28,7 @@ class DeadEndOfSZSY:
             break
 
         while True:
+            # noinspection PyUnresolvedReferences
             with self.GameSession(self, 1) as game:
                 result = game.host_game()
                 if result == "Defeat":
