@@ -144,7 +144,6 @@ class Gh(SimpleEnemy):
         self.bachu = pygame.mixer.Sound(self.settings.bachu)
         self.kange = pygame.mixer.Sound(self.settings.kange)
         self.zhonggu = pygame.mixer.Sound(self.settings.zhonggu)
-        self.flash = pygame.mixer.Sound(self.settings.flash)
         self.hit_sound = pygame.mixer.Sound(self.settings.hit)
 
         self.ganshen.play()
@@ -339,6 +338,7 @@ class Gh(SimpleEnemy):
 
             # 无法受到攻击
             deos_game.enemies_for_target.remove(user)
+            deos_game.head_invincible = True
 
         def check_life(self):
             self.counter += 1
@@ -347,6 +347,7 @@ class Gh(SimpleEnemy):
                 self.user.speed = self.settings.gh_speed
                 # 可以受到攻击
                 self.deos_game.enemies_for_target.add(self.user)
+                self.deos_game.head_invincible = False
                 # 广播
                 self.user.skill_framework = False
 

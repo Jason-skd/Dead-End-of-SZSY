@@ -32,7 +32,7 @@ class DeadEndOfSZSY:
                 result = game.host_game()
                 if result == "Defeat":
                     # 直到点击才重新开始本章
-                    while self.Defeat(self).run():
+                    while self.Defeat(self, '1').run():
                         break
                     continue
                 elif result == "Victory":
@@ -49,15 +49,14 @@ class DeadEndOfSZSY:
                     jf = self.GhJumpFace(self)
                     jf.run()
                     # 直到点击才重新开始本章
-                    while self.Defeat(self).run():
+                    while self.Defeat(self, '2').run():
                         break
                     # 重新开始本章游戏
                     continue
                 elif result == "Victory":
                     # 直到点击才开始下一章
-                    while self.NextChapt(self, "win").run():
-                        break
-                    break
+                    while True:
+                        self.Winning(self).run()
 
     class GameSession:
         """使用上下文管理器管理游戏资源"""
@@ -166,24 +165,6 @@ class DeadEndOfSZSY:
             # 让最近绘制的屏幕可见
             pygame.display.flip()
 
-    class Defeat(Interface):
-        """掌管失败界面的类"""
-        def __init__(self, deos_game):
-            """初始化与欢迎界面完全一致"""
-            super().__init__(deos_game)
-            self.deos_game = deos_game
-
-        def _create_play_button(self):
-            """重写play_button为try_again"""
-            self.play_button = Button(self, self.settings.play_button_width,
-                                      self.settings.play_button_height,
-                                      self.settings.play_button_x,
-                                      self.settings.play_button_y,
-                                      self.settings.play_button_color,
-                                      self.settings.play_color,
-                                      self.settings.play_font,
-                                      self.settings.play_size, "Try Again")
-
     class NextChapt(Interface):
         """掌管下一章节界面的类"""
         def __init__(self, deos_game, next_chap):
@@ -192,6 +173,8 @@ class DeadEndOfSZSY:
             self.deos_game = deos_game
             self.chapter_msg = CreateSurface(deos_game)
             self.next_chap = next_chap
+            self.logo_2_path = self.settings.logo_2
+            self.logo_2 = CreateSurface(deos_game, self.screen_rect.centerx, self.screen_rect.centery)
 
         def _create_play_button(self):
             """重写play_button为Enter!"""
@@ -210,11 +193,16 @@ class DeadEndOfSZSY:
             self.chapter_msg.rect.top = self.screen_rect.top + self.settings.nx_chap_top_dist
             self.chapter_msg.rect.centerx = self.screen_rect.centerx
 
+        def _crate_logo_2(self):
+            """创造logo2"""
+            self.logo_2.image_fill_surface(self.logo_2_path)
+
         def run(self):
             """点击按钮返回True"""
             while not self.play_clicked:
                 self._create_play_button()
                 self._create_next_chap_msg()
+                self._crate_logo_2()
                 self._check_events()
                 self._update_screen()
             return True
@@ -224,9 +212,68 @@ class DeadEndOfSZSY:
             self.screen.blit(self.bg, self.screen_rect)
             self.play_button.draw_button()
             self.chapter_msg.blitme()
+            self.logo_2.blitme()
 
             # 让最近绘制的屏幕可见
             pygame.display.flip()
+
+    class Defeat(NextChapt):
+        """掌管失败界面的类"""
+
+        def __init__(self, deos_game, current_chap):
+            """初始化与欢迎界面完全一致"""
+            super().__init__(deos_game, current_chap)
+
+        def _create_play_button(self):
+            """重写play_button为try_again"""
+            self.play_button = Button(self, self.settings.try_again_width,
+                                      self.settings.play_button_height,
+                                      self.settings.play_button_x,
+                                      self.settings.play_button_y,
+                                      self.settings.play_button_color,
+                                      self.settings.play_color,
+                                      self.settings.play_font,
+                                      self.settings.play_size, "Try Again")
+
+        def _create_next_chap_msg(self):
+            """绘制本章章通知"""
+            self.chapter_msg.text_fill_surface(70, f"chapter. {self.next_chap}")
+            self.chapter_msg.rect.top = self.screen_rect.top + self.settings.nx_chap_top_dist
+            self.chapter_msg.rect.centerx = self.screen_rect.centerx
+
+    class Winning(Interface):
+        def __init__(self, deos_game):
+            super().__init__(deos_game)
+            self.con_path = self.settings.congratulations
+            self.con_surface = CreateSurface(deos_game, self.screen_rect.centerx, self.screen_rect.centery)
+
+        def _create_congratulations(self):
+            self.con_surface.image_fill_surface(self.con_path)
+
+        def _check_events(self):
+            """响应输入指令"""
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+
+        def run(self):
+            """运行欢迎界面，点击了button返回True"""
+            while not self.play_clicked:
+                self._check_events()
+                self._create_congratulations()
+                self._update_screen()
+            return True
+
+        def _update_screen(self):
+            """绘制屏幕"""
+            self.screen.blit(self.bg, self.screen_rect)
+            self.con_surface.blitme()
+
+            # 让最近绘制的屏幕可见
+            pygame.display.flip()
+
+
+
 
     class GhJumpFace:
         """gh跳脸界面"""
@@ -327,7 +374,9 @@ class DeadEndOfSZSY:
             self.prod_waves_complete = False
             self.prod_sp_enemy_waves = None
             self.head_exist = False
+            self.head_prod = False
             self.prod_waves_complete = False
+            self.complete_prod_inf_sp_waves = False
 
             # 初始化游戏对象
             self.clock = pygame.time.Clock()
@@ -370,15 +419,21 @@ class DeadEndOfSZSY:
         def _tik(self):
             """计时"""
             self.prod_waves_complete = self.prod_sp_enemy_waves.check_prod()
-            if self.prod_waves_complete:
+            if self.prod_waves_complete and self.complete_prod_inf_sp_waves is False:
                 if self.settings.sp_inf:
-                    self.prod_sp_enemy_waves = self.ManageSimpleEnemyWaves(
+                    self.prod_inf_sp_enemy_waves = self.ManageSimpleEnemyWaves(
                         self, self.settings.inf_simple_enemy_wave,
                         self.settings.inf_simple_enemy_prod_blank,
                         self.settings.inf_simple_enemy_number)
+                    self.complete_prod_inf_sp_waves = True
+
+            if self.complete_prod_inf_sp_waves:
+                self.prod_inf_sp_enemy_waves.check_prod()
 
             if self.head_exist:
-                self._check_bullet_head_collisions()
+                # 如果不处于无敌状态
+                if not self.head_invincible:
+                    self._check_bullet_head_collisions()
                 self.gh_skill_manage.check_prod()
                 self._check_carrots_hero_collisions()
                 if self.hitevision_exist:
@@ -404,8 +459,8 @@ class DeadEndOfSZSY:
 
         def _check_victory(self):
             """检查是否胜利（击败所有敌人）"""
-            if not self.enemies_for_target and self.prod_waves_complete:
-                if self.settings.chap_head is None or self.head_exist:
+            if not self.enemies_for_target and self.prod_waves_complete and not self.head_exist:
+                if self.settings.chap_head is None or self.head_prod:
                     return True
             return False
 
@@ -425,6 +480,11 @@ class DeadEndOfSZSY:
             if self.gh_blood > 0:
                 self.gh_blood -= self.gh_hurt
                 self.gh_hurt = 0
+            else:
+                # noinspection PyTypeChecker
+                self.enemies_for_target.empty()
+                self.head_exist = False
+                self.gh.kill()
             return None
 
         def _check_events(self):
@@ -495,8 +555,10 @@ class DeadEndOfSZSY:
                 self.hitevision_exist = False
                 # 初始化技能重骨架
                 self.skill_frame = None
+                self.head_invincible = False
 
             self.head_exist = True
+            self.head_prod = True
 
         class ManageSimpleEnemyWaves:
             """产生waves波怪，每波间隔blank秒，每波number个怪"""
@@ -526,7 +588,7 @@ class DeadEndOfSZSY:
                     return False
 
                 else:
-                    if not self.deos_game.head_exist and self.deos_game.head_name:
+                    if not self.deos_game.head_prod and self.deos_game.head_name:
                         self.deos_game.prod_head()
 
                     # 完成，return True

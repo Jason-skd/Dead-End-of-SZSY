@@ -24,6 +24,13 @@ class Settings:
         self.play_font = None
         self.play_size = 100
 
+        # try again 界面
+        self.try_again_width = 400
+        self.logo_2 = 'images/logo - 2.png'
+
+        # winning界面
+        self.congratulations = 'images/congratulations.png'
+
         # 章节广播设置
         self.nx_chap_top_dist = 150
 
@@ -72,7 +79,7 @@ class Settings:
         self.carrot_numb = 8
         self.carrot_speed = 2
         self.carrot_dominate_duration = 1.5
-        self.carrot_lifespan = 60
+        self.carrot_lifespan = 180
 
         self.board_width = 589
         self.board_height = 227
@@ -91,9 +98,8 @@ class Settings:
         self.zhonggu = 'bgm/重骨架.wav'
         self.hit = 'bgm/打击.wav'
 
-        self.flash = 'bgm/闪现.wav'
         self.skill_f_duration = 3
-        self.frame_speed_up = 3
+        self.frame_speed_up = 4
         self.benzene = 'images/benzene.png'
 
         # bullet 设置
@@ -161,7 +167,7 @@ class Settings:
         self.sp_inf = True
         # 无限后
         self.inf_simple_enemy_number = 15
-        self.inf_simple_enemy_wave = 1
-        self.inf_simple_enemy_prod_blank = 10
+        self.inf_simple_enemy_wave = 9999
+        self.inf_simple_enemy_prod_blank = 7
 
         self.chap_head = 'gh'
