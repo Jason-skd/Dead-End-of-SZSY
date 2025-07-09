@@ -172,4 +172,4 @@ class Settings:
 
         self.chap_head = 'gh'
 
-        self.winning_sound = 'bgm/顶楼的马戏团 - 义务为豪大大鸡排所作个广告歌.mp3'
+        self.winning_sound = 'bgm/顶楼的马戏团 - 义务为豪大大鸡排所作个广告歌.wav'
