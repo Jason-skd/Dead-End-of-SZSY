@@ -1,0 +1,1 @@
+nuitka --standalone --include-data-files=C:\Users\ASUS\PycharmProjects\Dead_End_of_SZSY\.venv\Lib\site-packages\pygame\libjpeg-9.dll=./ Dead_End_of_SZSY.py

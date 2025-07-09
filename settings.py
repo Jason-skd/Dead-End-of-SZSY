@@ -57,11 +57,11 @@ class Settings:
 
         # enemies设置
         self.simple_enemy_width = 20
-        self.simple_enemy_harm = 5
+        self.simple_enemy_harm = 4
         self.simple_enemy_hurt_blank = 0.5
 
         self.gh_speed = 0.5
-        self.gh_harm = 25
+        self.gh_harm = 20
         self.gh_blood = 120
         self.gh_hurt_blank = 1.5
         self.gh_image = 'images/gh.jpg'
@@ -132,10 +132,10 @@ class Settings:
         self.bgm = "bgm/Andrew Prahlow - Travelers' encore.mp3"
         self.bg_image = 'images/bg - 1.png'
 
-        self.simple_enemy_number = 20
-        self.simple_enemy_wave = 7
+        self.simple_enemy_number = 15
+        self.simple_enemy_wave = 8
         self.simple_enemy_speed = 1.5
-        self.simple_enemy_prod_blank = 5
+        self.simple_enemy_prod_blank = 7
         # sp的图像
         self.sp_1 = 'images/sp - 1.jpg'
         self.sp_2 = 'images/sp - 2.jpg'
@@ -153,7 +153,7 @@ class Settings:
         self.bg_image = 'images/bg - 2.jpg'
 
         # 无限前
-        self.simple_enemy_number = 20
+        self.simple_enemy_number = 15
         self.simple_enemy_wave = 5
         self.simple_enemy_speed = 1.2
         self.simple_enemy_prod_blank = 5
@@ -171,3 +171,5 @@ class Settings:
         self.inf_simple_enemy_prod_blank = 7
 
         self.chap_head = 'gh'
+
+        self.winning_sound = 'bgm/顶楼的马戏团 - 义务为豪大大鸡排所作个广告歌.mp3'
